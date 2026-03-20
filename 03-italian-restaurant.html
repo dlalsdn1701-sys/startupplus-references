@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>라 테라짜 — La Terrazza Italian Restaurant</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Sans+KR:wght@300;400;500;700&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --cream: #faf7f2;
+            --warm-white: #f5f0e8;
+            --terracotta: #c45d3e;
+            --terracotta-light: #d4714f;
+            --olive: #6b7c4e;
+            --olive-dark: #4a5736;
+            --brown: #3d2c1e;
+            --brown-light: #5a4232;
+            --gold: #b8963e;
+            --text-dark: #2a2017;
+            --text-gray: #8a7e72;
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            overflow-x: hidden;
+        }
+
+        /* ===== NAV ===== */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 25px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.4s;
+        }
+        nav.scrolled {
+            background: rgba(250,247,242,0.95);
+            backdrop-filter: blur(20px);
+            padding: 15px 60px;
+            box-shadow: 0 2px 30px rgba(0,0,0,0.05);
+        }
+        .nav-logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--brown);
+            text-decoration: none;
+            letter-spacing: 3px;
+        }
+        .nav-logo span {
+            font-style: italic;
+            color: var(--terracotta);
+        }
+        .nav-links { display: flex; gap: 35px; align-items: center; }
+        .nav-links a {
+            color: var(--brown);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            font-weight: 400;
+            transition: color 0.3s;
+        }
+        .nav-links a:hover { color: var(--terracotta); }
+        .nav-cta {
+            padding: 10px 28px !important;
+            background: var(--terracotta) !important;
+            color: var(--cream) !important;
+            border-radius: 30px;
+            transition: all 0.3s !important;
+        }
+        .nav-cta:hover {
+            background: var(--terracotta-light) !important;
+            transform: translateY(-1px);
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=1920&q=80') center/cover;
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+                135deg,
+                rgba(250,247,242,0.92) 0%,
+                rgba(250,247,242,0.7) 50%,
+                rgba(250,247,242,0.3) 100%
+            );
+        }
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            padding: 0 80px;
+            max-width: 800px;
+        }
+        .hero-inner { opacity: 0; animation: fadeUp 1s ease 0.5s forwards; }
+        .hero-tag {
+            display: inline-block;
+            background: var(--olive);
+            color: var(--cream);
+            padding: 6px 18px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            letter-spacing: 3px;
+            margin-bottom: 30px;
+        }
+        .hero-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 5rem;
+            font-weight: 700;
+            line-height: 1.1;
+            color: var(--brown);
+            margin-bottom: 25px;
+        }
+        .hero-title i {
+            color: var(--terracotta);
+            font-weight: 400;
+        }
+        .hero-desc {
+            font-size: 1rem;
+            color: var(--text-gray);
+            font-weight: 300;
+            line-height: 1.9;
+            max-width: 480px;
+            margin-bottom: 40px;
+        }
+        .hero-btns { display: flex; gap: 15px; }
+        .btn-primary {
+            display: inline-block;
+            padding: 14px 40px;
+            background: var(--terracotta);
+            color: var(--cream);
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        .btn-primary:hover {
+            background: var(--terracotta-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(196,93,62,0.3);
+        }
+        .btn-outline {
+            display: inline-block;
+            padding: 14px 40px;
+            border: 1.5px solid var(--brown);
+            color: var(--brown);
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+        }
+        .btn-outline:hover {
+            background: var(--brown);
+            color: var(--cream);
+        }
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== FEATURES STRIP ===== */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            border-top: 1px solid rgba(0,0,0,0.06);
+        }
+        .feature-item {
+            padding: 50px 40px;
+            text-align: center;
+            border-right: 1px solid rgba(0,0,0,0.06);
+            transition: background 0.3s;
+        }
+        .feature-item:last-child { border-right: none; }
+        .feature-item:hover { background: rgba(196,93,62,0.04); }
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: 15px;
+        }
+        .feature-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--brown);
+            margin-bottom: 8px;
+        }
+        .feature-desc {
+            font-size: 0.8rem;
+            color: var(--text-gray);
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        /* ===== ABOUT ===== */
+        .about {
+            padding: 140px 80px;
+        }
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: center;
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .about-images {
+            position: relative;
+            height: 600px;
+        }
+        .about-img-1 {
+            width: 65%;
+            height: 420px;
+            object-fit: cover;
+            border-radius: 20px;
+            position: absolute;
+            top: 0; left: 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+        .about-img-2 {
+            width: 55%;
+            height: 320px;
+            object-fit: cover;
+            border-radius: 20px;
+            position: absolute;
+            bottom: 0; right: 0;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+            border: 5px solid var(--cream);
+        }
+        .about-badge {
+            position: absolute;
+            bottom: 60px; left: 50%;
+            transform: translateX(-50%);
+            width: 100px; height: 100px;
+            background: var(--terracotta);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--cream);
+            z-index: 2;
+        }
+        .about-badge-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+        .about-badge-text {
+            font-size: 0.55rem;
+            letter-spacing: 2px;
+        }
+        .about-label {
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            color: var(--terracotta);
+            margin-bottom: 15px;
+        }
+        .about-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--brown);
+            line-height: 1.2;
+            margin-bottom: 25px;
+        }
+        .about-title i { color: var(--terracotta); }
+        .about-desc {
+            font-size: 0.95rem;
+            color: var(--text-gray);
+            font-weight: 300;
+            line-height: 2;
+            margin-bottom: 35px;
+        }
+        .about-sig {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-size: 1.3rem;
+            color: var(--brown);
+        }
+        .about-sig span {
+            display: block;
+            font-size: 0.75rem;
+            font-style: normal;
+            font-family: 'Noto Sans KR', sans-serif;
+            color: var(--text-gray);
+            margin-top: 5px;
+            letter-spacing: 2px;
+        }
+
+        /* ===== MENU SHOWCASE ===== */
+        .menu-section {
+            padding: 120px 0;
+            background: var(--warm-white);
+        }
+        .menu-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 80px;
+        }
+        .menu-header {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+        .menu-header .about-label { text-align: center; }
+        .menu-header h2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 700;
+            color: var(--brown);
+        }
+        .menu-header h2 i { color: var(--terracotta); }
+        .menu-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .menu-card {
+            background: var(--cream);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: transform 0.4s, box-shadow 0.4s;
+        }
+        .menu-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.08);
+        }
+        .menu-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+        }
+        .menu-card-body {
+            padding: 30px;
+        }
+        .menu-card-tag {
+            display: inline-block;
+            background: rgba(107,124,78,0.1);
+            color: var(--olive-dark);
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+        .menu-card-name {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--brown);
+            margin-bottom: 8px;
+        }
+        .menu-card-desc {
+            font-size: 0.85rem;
+            color: var(--text-gray);
+            font-weight: 300;
+            line-height: 1.7;
+            margin-bottom: 15px;
+        }
+        .menu-card-price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--terracotta);
+        }
+
+        /* ===== PARALLAX IMAGE ===== */
+        .parallax-section {
+            height: 60vh;
+            position: relative;
+            overflow: hidden;
+        }
+        .parallax-section img {
+            width: 100%; height: 120%;
+            object-fit: cover;
+            position: absolute;
+            top: -10%;
+        }
+        .parallax-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(42,32,23,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .parallax-text {
+            text-align: center;
+            color: var(--cream);
+        }
+        .parallax-text h3 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            font-weight: 400;
+            font-style: italic;
+            margin-bottom: 15px;
+        }
+        .parallax-text p {
+            font-size: 0.85rem;
+            letter-spacing: 4px;
+            font-weight: 300;
+            opacity: 0.8;
+        }
+
+        /* ===== REVIEWS ===== */
+        .reviews {
+            padding: 120px 80px;
+            background: var(--cream);
+        }
+        .reviews-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .reviews-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+        .review-card {
+            background: var(--warm-white);
+            padding: 40px 30px;
+            border-radius: 20px;
+            transition: transform 0.3s;
+        }
+        .review-card:hover { transform: translateY(-5px); }
+        .review-stars {
+            color: var(--gold);
+            font-size: 1rem;
+            margin-bottom: 20px;
+            letter-spacing: 3px;
+        }
+        .review-text {
+            font-size: 0.9rem;
+            color: var(--text-gray);
+            font-weight: 300;
+            line-height: 1.9;
+            margin-bottom: 25px;
+            font-style: italic;
+        }
+        .review-author {
+            font-weight: 500;
+            color: var(--brown);
+            font-size: 0.85rem;
+        }
+        .review-date {
+            font-size: 0.75rem;
+            color: var(--text-gray);
+            margin-top: 4px;
+        }
+
+        /* ===== CTA ===== */
+        .cta-section {
+            padding: 120px 80px;
+            background: var(--brown);
+            text-align: center;
+            color: var(--cream);
+            position: relative;
+            overflow: hidden;
+        }
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            top: -50%; right: -20%;
+            width: 600px; height: 600px;
+            border-radius: 50%;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .cta-label {
+            font-size: 0.7rem;
+            letter-spacing: 4px;
+            color: var(--terracotta-light);
+            margin-bottom: 25px;
+        }
+        .cta-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .cta-desc {
+            font-size: 0.95rem;
+            font-weight: 300;
+            opacity: 0.7;
+            line-height: 1.8;
+            max-width: 500px;
+            margin: 0 auto 40px;
+        }
+        .cta-btn {
+            display: inline-block;
+            padding: 16px 50px;
+            background: var(--terracotta);
+            color: var(--cream);
+            text-decoration: none;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            letter-spacing: 2px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .cta-btn:hover {
+            background: var(--terracotta-light);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(196,93,62,0.4);
+        }
+        .cta-info {
+            margin-top: 50px;
+            display: flex;
+            justify-content: center;
+            gap: 60px;
+        }
+        .cta-info-item h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--terracotta-light);
+            margin-bottom: 8px;
+            letter-spacing: 2px;
+        }
+        .cta-info-item p {
+            font-size: 0.85rem;
+            font-weight: 300;
+            opacity: 0.6;
+            line-height: 1.7;
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 50px 80px;
+            background: var(--text-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        footer .logo-f {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.3rem;
+            color: var(--cream);
+            letter-spacing: 3px;
+        }
+        footer .copy {
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.3);
+            letter-spacing: 2px;
+        }
+        footer .socials { display: flex; gap: 20px; }
+        footer .socials a {
+            color: rgba(255,255,255,0.4);
+            text-decoration: none;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            transition: color 0.3s;
+        }
+        footer .socials a:hover { color: var(--terracotta-light); }
+
+        /* ===== ANIMATIONS ===== */
+        .anim {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .anim.visible { opacity: 1; transform: translateY(0); }
+        .anim-d1 { transition-delay: 0.1s; }
+        .anim-d2 { transition-delay: 0.2s; }
+        .anim-d3 { transition-delay: 0.3s; }
+
+        @media (max-width: 768px) {
+            nav { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .hero-content { padding: 0 25px; }
+            .hero-title { font-size: 2.8rem; }
+            .features { grid-template-columns: repeat(2, 1fr); }
+            .about { padding: 80px 25px; }
+            .about-grid { grid-template-columns: 1fr; }
+            .about-images { height: 400px; }
+            .menu-container { padding: 0 25px; }
+            .menu-cards { grid-template-columns: 1fr; }
+            .reviews { padding: 80px 25px; }
+            .reviews-grid { grid-template-columns: 1fr; }
+            .cta-section { padding: 80px 25px; }
+            .cta-info { flex-direction: column; gap: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Nav -->
+    <nav id="nav">
+        <a href="#" class="nav-logo">La <span>Terrazza</span></a>
+        <div class="nav-links">
+            <a href="#about">ABOUT</a>
+            <a href="#menu">MENU</a>
+            <a href="#reviews">REVIEWS</a>
+            <a href="#reserve" class="nav-cta">예약하기</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <div class="hero-inner">
+                <div class="hero-tag">ITALIAN FINE DINING</div>
+                <h1 class="hero-title">
+                    Taste of<br><i>Authentic</i><br>Italia
+                </h1>
+                <p class="hero-desc">
+                    이탈리아 토스카나의 따뜻한 햇살과 정통 레시피를<br>
+                    서울 한복판에서 만나보세요. 매일 직접 반죽하는<br>
+                    수제 파스타와 나폴리 피자가 기다립니다.
+                </p>
+                <div class="hero-btns">
+                    <a href="#reserve" class="btn-primary">예약하기</a>
+                    <a href="#menu" class="btn-outline">메뉴 보기</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <div class="features">
+        <div class="feature-item anim">
+            <div class="feature-icon">🍝</div>
+            <div class="feature-title">Handmade Pasta</div>
+            <div class="feature-desc">매일 아침 직접 반죽하는<br>수제 생면 파스타</div>
+        </div>
+        <div class="feature-item anim anim-d1">
+            <div class="feature-icon">🍕</div>
+            <div class="feature-title">Napoli Pizza</div>
+            <div class="feature-desc">400도 화덕에서 구워내는<br>정통 나폴리 피자</div>
+        </div>
+        <div class="feature-item anim anim-d2">
+            <div class="feature-icon">🍷</div>
+            <div class="feature-title">Wine Cellar</div>
+            <div class="feature-desc">200종 이상의 이탈리안<br>와인 셀렉션</div>
+        </div>
+        <div class="feature-item anim anim-d3">
+            <div class="feature-icon">🌿</div>
+            <div class="feature-title">Organic</div>
+            <div class="feature-desc">직접 재배한 바질과<br>유기농 식재료</div>
+        </div>
+    </div>
+
+    <!-- About -->
+    <section class="about" id="about">
+        <div class="about-grid">
+            <div class="about-images anim">
+                <img class="about-img-1" src="https://images.unsplash.com/photo-1551183053-bf91a1d81141?w=700&q=80" alt="레스토랑 내부">
+                <img class="about-img-2" src="https://images.unsplash.com/photo-1528137871618-79d2761e3fd5?w=600&q=80" alt="파스타 만들기">
+                <div class="about-badge">
+                    <div class="about-badge-num">12</div>
+                    <div class="about-badge-text">YEARS</div>
+                </div>
+            </div>
+            <div>
+                <p class="about-label anim">OUR STORY</p>
+                <h2 class="about-title anim anim-d1">
+                    이탈리아의 <i>맛</i>과<br>따뜻한 환대
+                </h2>
+                <p class="about-desc anim anim-d2">
+                    라 테라짜는 이탈리아 토스카나 출신 마르코 셰프가
+                    2012년 서울에 문을 연 정통 이탈리안 레스토랑입니다.
+                    할머니로부터 전수받은 전통 레시피와 매일 아침 직접
+                    반죽하는 수제 파스타, 400도 화덕에서 구워내는 피자까지.
+                    이탈리아 가정의 따뜻한 식탁을 재현합니다.
+                </p>
+                <div class="about-sig anim anim-d3">
+                    Marco Rossi
+                    <span>HEAD CHEF & FOUNDER</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Menu -->
+    <section class="menu-section" id="menu">
+        <div class="menu-container">
+            <div class="menu-header">
+                <p class="about-label anim">SIGNATURE MENU</p>
+                <h2 class="anim anim-d1">Our <i>Best</i> Dishes</h2>
+            </div>
+            <div class="menu-cards">
+                <div class="menu-card anim">
+                    <img src="https://images.unsplash.com/photo-1473093295043-cdd812d0e601?w=600&q=80" alt="파스타">
+                    <div class="menu-card-body">
+                        <div class="menu-card-tag">PASTA</div>
+                        <div class="menu-card-name">Truffle Tagliatelle</div>
+                        <div class="menu-card-desc">블랙 트러플과 파르미지아노 레지아노의 풍미가 어우러진 수제 딸리아뗄레</div>
+                        <div class="menu-card-price">₩38,000</div>
+                    </div>
+                </div>
+                <div class="menu-card anim anim-d1">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80" alt="피자">
+                    <div class="menu-card-body">
+                        <div class="menu-card-tag">PIZZA</div>
+                        <div class="menu-card-name">Margherita D.O.C</div>
+                        <div class="menu-card-desc">산 마르자노 토마토, 모짜렐라 디 부팔라, 프레시 바질의 클래식 조화</div>
+                        <div class="menu-card-price">₩28,000</div>
+                    </div>
+                </div>
+                <div class="menu-card anim anim-d2">
+                    <img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80" alt="스테이크">
+                    <div class="menu-card-body">
+                        <div class="menu-card-tag">MAIN</div>
+                        <div class="menu-card-name">Bistecca Fiorentina</div>
+                        <div class="menu-card-desc">숯불에 구워낸 프리미엄 티본 스테이크와 로즈마리 감자</div>
+                        <div class="menu-card-price">₩68,000</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Parallax -->
+    <section class="parallax-section">
+        <img src="https://images.unsplash.com/photo-1466978913421-dad2ebd01d17?w=1920&q=80" alt="와인">
+        <div class="parallax-overlay">
+            <div class="parallax-text anim">
+                <h3>La vita è troppo breve<br>per bere vino cattivo</h3>
+                <p>인생은 나쁜 와인을 마시기엔 너무 짧다</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews -->
+    <section class="reviews" id="reviews">
+        <div class="reviews-container">
+            <div class="reviews-header">
+                <p class="about-label anim">GUEST REVIEWS</p>
+                <h2 style="font-family:'Cormorant Garamond',serif; font-size:3rem; color:var(--brown);" class="anim anim-d1">
+                    What Our <i style="color:var(--terracotta)">Guests</i> Say
+                </h2>
+            </div>
+            <div class="reviews-grid">
+                <div class="review-card anim">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"서울에서 이렇게 정통 이탈리안을 맛볼 수 있다니. 수제 파스타의 식감이 정말 놀라웠어요. 분위기도 마치 이탈리아에 온 것 같았습니다."</p>
+                    <div class="review-author">김서연</div>
+                    <div class="review-date">2024.11</div>
+                </div>
+                <div class="review-card anim anim-d1">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"프로포즈 장소로 선택했는데, 테라스 뷰와 음식 모두 완벽했습니다. 특히 소믈리에의 와인 페어링 추천이 인상적이었어요."</p>
+                    <div class="review-author">이준혁</div>
+                    <div class="review-date">2024.10</div>
+                </div>
+                <div class="review-card anim anim-d2">
+                    <div class="review-stars">★★★★★</div>
+                    <p class="review-text">"비즈니스 디너로 방문했는데, 프라이빗 룸의 분위기와 서비스 모두 훌륭했습니다. 거래처 분들도 매우 만족하셨어요."</p>
+                    <div class="review-author">박지민</div>
+                    <div class="review-date">2024.09</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" id="reserve">
+        <p class="cta-label anim">RESERVATION</p>
+        <h2 class="cta-title anim anim-d1">
+            특별한 날,<br>라 테라짜와 함께
+        </h2>
+        <p class="cta-desc anim anim-d2">
+            기념일, 비즈니스 미팅, 소중한 모임까지<br>
+            완벽한 이탈리안 다이닝을 경험하세요
+        </p>
+        <a href="tel:02-1234-5678" class="cta-btn anim anim-d3">예약 문의하기</a>
+        <div class="cta-info">
+            <div class="cta-info-item anim">
+                <h4>LOCATION</h4>
+                <p>서울시 용산구 이태원로 45길 12<br>라 테라짜 빌딩 1-2층</p>
+            </div>
+            <div class="cta-info-item anim anim-d1">
+                <h4>HOURS</h4>
+                <p>런치 11:30 - 15:00<br>디너 17:30 - 22:30<br>월요일 휴무</p>
+            </div>
+            <div class="cta-info-item anim anim-d2">
+                <h4>CONTACT</h4>
+                <p>T. 02-1234-5678<br>E. hello@laterrazza.kr</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="logo-f">La Terrazza</div>
+        <div class="copy">© 2024 LA TERRAZZA. ALL RIGHTS RESERVED.</div>
+        <div class="socials">
+            <a href="#">INSTAGRAM</a>
+            <a href="#">FACEBOOK</a>
+        </div>
+    </footer>
+
+    <script>
+        // Nav scroll
+        window.addEventListener('scroll', () => {
+            document.getElementById('nav').classList.toggle('scrolled', window.scrollY > 50);
+        });
+
+        // Scroll animations
+        const anims = document.querySelectorAll('.anim');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
+        }, { threshold: 0.15 });
+        anims.forEach(a => observer.observe(a));
+    </script>
+</body>
+</html>

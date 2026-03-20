@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>하루 스시 — HARU SUSHI OMAKASE</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --black: #0a0a0a;
+            --charcoal: #141414;
+            --white: #f8f6f3;
+            --red: #c43e3e;
+            --red-dark: #8b2929;
+            --beige: #d4c5a9;
+            --gray: #666;
+            --gray-light: #999;
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            overflow-x: hidden;
+        }
+
+        /* ===== LOADER ===== */
+        .loader {
+            position: fixed;
+            inset: 0;
+            background: var(--black);
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 1s ease 0.5s, visibility 1s ease 0.5s;
+        }
+        .loader.done { opacity: 0; visibility: hidden; }
+        .loader-kanji {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 6rem;
+            color: var(--red);
+            opacity: 0;
+            animation: kanji-in 2s ease forwards;
+        }
+        @keyframes kanji-in {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.6; transform: scale(1.05); }
+        }
+
+        /* ===== NAV ===== */
+        nav {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 30px 60px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            mix-blend-mode: difference;
+        }
+        .logo {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 1.2rem;
+            color: var(--white);
+            letter-spacing: 8px;
+            text-decoration: none;
+        }
+        .logo-jp {
+            display: block;
+            font-size: 0.6rem;
+            letter-spacing: 4px;
+            opacity: 0.5;
+            margin-top: 2px;
+        }
+        .nav-right { display: flex; gap: 35px; align-items: center; }
+        .nav-right a {
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            font-weight: 300;
+        }
+
+        /* ===== HERO ===== */
+        .hero {
+            height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            position: relative;
+        }
+        .hero-left {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 80px;
+            position: relative;
+            z-index: 2;
+        }
+        .hero-label {
+            font-size: 0.65rem;
+            letter-spacing: 6px;
+            color: var(--red);
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: slideUp 0.8s ease 2s forwards;
+        }
+        .hero-title {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 4.5rem;
+            font-weight: 900;
+            line-height: 1.15;
+            margin-bottom: 30px;
+            opacity: 0;
+            animation: slideUp 0.8s ease 2.2s forwards;
+        }
+        .hero-title .line2 {
+            font-family: 'Cormorant Garamond', serif;
+            font-style: italic;
+            font-weight: 400;
+            font-size: 3rem;
+            color: var(--beige);
+            display: block;
+            margin-top: 10px;
+        }
+        .hero-desc {
+            font-size: 0.9rem;
+            color: var(--gray-light);
+            font-weight: 300;
+            line-height: 1.9;
+            max-width: 400px;
+            margin-bottom: 50px;
+            opacity: 0;
+            animation: slideUp 0.8s ease 2.4s forwards;
+        }
+        .hero-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 4px;
+            opacity: 0;
+            animation: slideUp 0.8s ease 2.6s forwards;
+            transition: gap 0.3s;
+        }
+        .hero-btn:hover { gap: 25px; }
+        .hero-btn-line {
+            width: 50px; height: 1px;
+            background: var(--red);
+            transition: width 0.3s;
+        }
+        .hero-btn:hover .hero-btn-line { width: 70px; }
+
+        .hero-right {
+            position: relative;
+            overflow: hidden;
+        }
+        .hero-img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            animation: imgReveal 1.2s ease 1.8s forwards;
+        }
+        .hero-right::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, var(--black) 0%, transparent 30%);
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes imgReveal {
+            from { opacity: 0; transform: scale(1.1); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* ===== VERTICAL TEXT ACCENT ===== */
+        .v-text {
+            position: fixed;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%) rotate(90deg);
+            font-size: 0.6rem;
+            letter-spacing: 5px;
+            color: var(--gray);
+            z-index: 50;
+            mix-blend-mode: difference;
+        }
+
+        /* ===== PHILOSOPHY ===== */
+        .philosophy {
+            padding: 160px 0;
+            text-align: center;
+            position: relative;
+        }
+        .philosophy::before {
+            content: '鮨';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Noto Serif JP', serif;
+            font-size: 25rem;
+            color: rgba(196, 62, 62, 0.03);
+            pointer-events: none;
+        }
+        .phil-label {
+            font-size: 0.65rem;
+            letter-spacing: 6px;
+            color: var(--red);
+            margin-bottom: 30px;
+        }
+        .phil-text {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 2rem;
+            font-weight: 400;
+            line-height: 2.2;
+            max-width: 700px;
+            margin: 0 auto;
+            letter-spacing: 2px;
+        }
+        .phil-text .em {
+            color: var(--beige);
+            font-style: italic;
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.2rem;
+        }
+
+        /* ===== OMAKASE COURSE ===== */
+        .course {
+            padding: 120px 0;
+            background: var(--charcoal);
+        }
+        .course-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 60px;
+        }
+        .course-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            margin-bottom: 80px;
+        }
+        .course-header-left { max-width: 500px; }
+        .course-price {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3rem;
+            color: var(--beige);
+            font-style: italic;
+        }
+        .course-price span {
+            font-size: 1rem;
+            color: var(--gray);
+            font-style: normal;
+            font-family: 'Noto Sans KR', sans-serif;
+        }
+        .course-items {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+        .course-item {
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 3/4;
+        }
+        .course-item img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            transition: transform 1s ease;
+        }
+        .course-item:hover img { transform: scale(1.06); }
+        .course-item-info {
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            padding: 30px 20px;
+            background: linear-gradient(to top, rgba(0,0,0,0.85), transparent);
+        }
+        .course-item-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            color: var(--red);
+            font-style: italic;
+            line-height: 1;
+        }
+        .course-item-name {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 1rem;
+            margin-top: 8px;
+            letter-spacing: 2px;
+        }
+        .course-item-name-en {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 0.8rem;
+            color: var(--gray-light);
+            font-style: italic;
+            margin-top: 4px;
+        }
+
+        /* ===== SPACE ===== */
+        .space {
+            padding: 0;
+            position: relative;
+            height: 80vh;
+            overflow: hidden;
+        }
+        .space img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+        }
+        .space-overlay {
+            position: absolute;
+            inset: 0;
+            background: rgba(10,10,10,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+        }
+        .space-text {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 3.5rem;
+            font-style: italic;
+            text-align: center;
+            line-height: 1.5;
+            color: var(--beige);
+        }
+        .space-sub {
+            font-size: 0.85rem;
+            color: var(--gray-light);
+            letter-spacing: 4px;
+            margin-top: 20px;
+            font-weight: 300;
+        }
+
+        /* ===== MASTER ===== */
+        .master {
+            padding: 140px 0;
+            background: var(--black);
+        }
+        .master-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 60px;
+        }
+        .master-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 80px;
+            align-items: center;
+        }
+        .master-img-wrapper {
+            position: relative;
+        }
+        .master-img-wrapper img {
+            width: 100%; height: 500px;
+            object-fit: cover;
+            filter: grayscale(40%) contrast(1.1);
+        }
+        .master-img-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -20px; right: -20px;
+            width: 80px; height: 80px;
+            border-top: 2px solid var(--red);
+            border-right: 2px solid var(--red);
+        }
+        .master-label {
+            font-size: 0.65rem;
+            letter-spacing: 6px;
+            color: var(--red);
+            margin-bottom: 25px;
+        }
+        .master-name {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .master-name-en {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--gray-light);
+            margin-bottom: 30px;
+        }
+        .master-desc {
+            font-size: 0.95rem;
+            color: var(--gray-light);
+            font-weight: 300;
+            line-height: 2;
+            margin-bottom: 40px;
+        }
+        .master-career {
+            display: flex;
+            gap: 40px;
+        }
+        .career-item {
+            padding-top: 15px;
+            border-top: 1px solid var(--red);
+        }
+        .career-num {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.5rem;
+            font-style: italic;
+            color: var(--beige);
+        }
+        .career-label {
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            color: var(--gray);
+            margin-top: 5px;
+        }
+
+        /* ===== RESERVATION ===== */
+        .reserve {
+            padding: 140px 60px;
+            background: var(--charcoal);
+            text-align: center;
+            position: relative;
+        }
+        .reserve-line {
+            width: 1px; height: 60px;
+            background: var(--red);
+            margin: 0 auto 40px;
+        }
+        .reserve-label {
+            font-size: 0.65rem;
+            letter-spacing: 6px;
+            color: var(--red);
+            margin-bottom: 30px;
+        }
+        .reserve-title {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .reserve-title-en {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.8rem;
+            font-style: italic;
+            color: var(--beige);
+            margin-bottom: 40px;
+        }
+        .reserve-info {
+            font-size: 0.9rem;
+            color: var(--gray-light);
+            font-weight: 300;
+            line-height: 2;
+            margin-bottom: 50px;
+        }
+        .reserve-btn {
+            display: inline-block;
+            padding: 18px 60px;
+            border: 1px solid var(--red);
+            color: var(--white);
+            text-decoration: none;
+            font-size: 0.8rem;
+            letter-spacing: 5px;
+            transition: all 0.4s;
+        }
+        .reserve-btn:hover {
+            background: var(--red);
+            box-shadow: 0 10px 40px rgba(196,62,62,0.2);
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            padding: 50px 60px;
+            background: var(--black);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
+        .footer-left {
+            font-family: 'Noto Serif JP', serif;
+            font-size: 1rem;
+            letter-spacing: 5px;
+            color: var(--beige);
+        }
+        .footer-center {
+            font-size: 0.7rem;
+            color: var(--gray);
+            letter-spacing: 2px;
+        }
+        .footer-right { display: flex; gap: 25px; }
+        .footer-right a {
+            color: var(--gray);
+            text-decoration: none;
+            font-size: 0.7rem;
+            letter-spacing: 2px;
+            transition: color 0.3s;
+        }
+        .footer-right a:hover { color: var(--red); }
+
+        /* ===== SCROLL ANIM ===== */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .fade-in.show { opacity: 1; transform: translateY(0); }
+        .fd1 { transition-delay: 0.1s; }
+        .fd2 { transition-delay: 0.2s; }
+        .fd3 { transition-delay: 0.3s; }
+        .fd4 { transition-delay: 0.4s; }
+
+        @media (max-width: 768px) {
+            nav { padding: 15px 20px; }
+            .nav-right { display: none; }
+            .hero { grid-template-columns: 1fr; }
+            .hero-right { position: absolute; inset: 0; }
+            .hero-right::after { background: linear-gradient(to right, var(--black) 0%, rgba(10,10,10,0.7) 100%); }
+            .hero-left { padding: 0 30px; z-index: 3; }
+            .hero-title { font-size: 2.5rem; }
+            .hero-title .line2 { font-size: 1.8rem; }
+            .course-items { grid-template-columns: repeat(2, 1fr); }
+            .master-grid { grid-template-columns: 1fr; }
+            .course-container, .master-container { padding: 0 20px; }
+            .v-text { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loader -->
+    <div class="loader" id="loader">
+        <div class="loader-kanji">鮨</div>
+    </div>
+
+    <!-- Vertical accent -->
+    <div class="v-text">HARU SUSHI OMAKASE — SINCE 2018</div>
+
+    <!-- Nav -->
+    <nav>
+        <a href="#" class="logo">
+            HARU
+            <span class="logo-jp">하루 스시</span>
+        </a>
+        <div class="nav-right">
+            <a href="#course">OMAKASE</a>
+            <a href="#master">MASTER</a>
+            <a href="#reserve">RESERVATION</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero">
+        <div class="hero-left">
+            <p class="hero-label">PREMIUM OMAKASE</p>
+            <h1 class="hero-title">
+                장인의 손끝에서<br>완성되는 한 점
+                <span class="line2">The Art of Sushi</span>
+            </h1>
+            <p class="hero-desc">
+                최상급 제철 생선만을 엄선하여<br>
+                스시 장인이 눈 앞에서 완성하는<br>
+                프리미엄 오마카세 경험
+            </p>
+            <a href="#reserve" class="hero-btn">
+                예약 안내
+                <span class="hero-btn-line"></span>
+            </a>
+        </div>
+        <div class="hero-right">
+            <img class="hero-img" src="https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=1200&q=80" alt="스시">
+        </div>
+    </section>
+
+    <!-- Philosophy -->
+    <section class="philosophy">
+        <p class="phil-label fade-in">PHILOSOPHY</p>
+        <p class="phil-text fade-in fd1">
+            하루(一)의 <span class="em">한 점</span>에는<br>
+            바다의 계절과 장인의 세월이<br>
+            고스란히 담겨 있습니다
+        </p>
+    </section>
+
+    <!-- Course -->
+    <section class="course" id="course">
+        <div class="course-container">
+            <div class="course-header">
+                <div class="course-header-left">
+                    <p class="phil-label fade-in">OMAKASE COURSE</p>
+                    <h2 style="font-family:'Noto Serif JP',serif; font-size:2.2rem; margin-top:10px;" class="fade-in fd1">
+                        오마카세 코스
+                    </h2>
+                    <p style="font-size:0.85rem; color:var(--gray-light); margin-top:15px; font-weight:300; line-height:1.8;" class="fade-in fd2">
+                        최상의 네타를 셰프에게 맡기세요.<br>
+                        그날의 가장 좋은 재료로 구성됩니다.
+                    </p>
+                </div>
+                <div class="course-price fade-in fd2">
+                    ¥180,000 ~<br>
+                    <span>1인 기준 · 세금 별도</span>
+                </div>
+            </div>
+            <div class="course-items">
+                <div class="course-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1617196034183-421b4917c92d?w=500&q=80" alt="사키즈케">
+                    <div class="course-item-info">
+                        <div class="course-item-num">01</div>
+                        <div class="course-item-name">先付</div>
+                        <div class="course-item-name-en">Sakizuke</div>
+                    </div>
+                </div>
+                <div class="course-item fade-in fd1">
+                    <img src="https://images.unsplash.com/photo-1553621042-f6e147245754?w=500&q=80" alt="오츠쿠리">
+                    <div class="course-item-info">
+                        <div class="course-item-num">02</div>
+                        <div class="course-item-name">お造り</div>
+                        <div class="course-item-name-en">Otsukuri</div>
+                    </div>
+                </div>
+                <div class="course-item fade-in fd2">
+                    <img src="https://images.unsplash.com/photo-1611143669185-af224c5e3252?w=500&q=80" alt="니기리">
+                    <div class="course-item-info">
+                        <div class="course-item-num">03</div>
+                        <div class="course-item-name">握り</div>
+                        <div class="course-item-name-en">Nigiri Sushi</div>
+                    </div>
+                </div>
+                <div class="course-item fade-in fd3">
+                    <img src="https://images.unsplash.com/photo-1582450871972-ab5ca641643d?w=500&q=80" alt="마키모노">
+                    <div class="course-item-info">
+                        <div class="course-item-num">04</div>
+                        <div class="course-item-name">巻物</div>
+                        <div class="course-item-name-en">Makimono</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Space -->
+    <section class="space">
+        <img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1920&q=80" alt="공간">
+        <div class="space-overlay">
+            <p class="space-text fade-in">
+                Silence is the<br>greatest seasoning
+            </p>
+            <p class="space-sub fade-in fd1">고요함이 가장 좋은 양념입니다</p>
+        </div>
+    </section>
+
+    <!-- Master -->
+    <section class="master" id="master">
+        <div class="master-container">
+            <div class="master-grid">
+                <div class="master-img-wrapper fade-in">
+                    <img src="https://images.unsplash.com/photo-1607631568010-a87245c0daf8?w=800&q=80" alt="마스터">
+                </div>
+                <div>
+                    <p class="master-label fade-in">SUSHI MASTER</p>
+                    <h2 class="master-name fade-in fd1">타카하시 켄지</h2>
+                    <p class="master-name-en fade-in fd1">Kenji Takahashi</p>
+                    <p class="master-desc fade-in fd2">
+                        도쿄 긴자에서 25년간 스시의 길을 걸어온 타카하시 켄지 장인은
+                        츠키지 시장에서 매일 새벽 직접 엄선한 최상의 네타만을 사용합니다.
+                        하루 단 12석, 오직 장인의 손끝에서 완성되는 진정한 오마카세를
+                        경험하실 수 있습니다.
+                    </p>
+                    <div class="master-career fade-in fd3">
+                        <div class="career-item">
+                            <div class="career-num">25</div>
+                            <div class="career-label">YEARS</div>
+                        </div>
+                        <div class="career-item">
+                            <div class="career-num">12</div>
+                            <div class="career-label">SEATS ONLY</div>
+                        </div>
+                        <div class="career-item">
+                            <div class="career-num">★</div>
+                            <div class="career-label">MICHELIN</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reservation -->
+    <section class="reserve" id="reserve">
+        <div class="reserve-line"></div>
+        <p class="reserve-label fade-in">RESERVATION</p>
+        <h2 class="reserve-title fade-in fd1">예약 안내</h2>
+        <p class="reserve-title-en fade-in fd1">ご予約</p>
+        <p class="reserve-info fade-in fd2">
+            하루 스시는 완전 예약제로 운영됩니다<br>
+            런치 12:00 · 디너 18:00 / 20:30 (2부제)<br>
+            하루 전 예약 취소 시 위약금이 발생합니다
+        </p>
+        <a href="tel:02-1234-5678" class="reserve-btn fade-in fd3">02-1234-5678</a>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-left">HARU 鮨</div>
+        <div class="footer-center">© 2024 HARU SUSHI OMAKASE</div>
+        <div class="footer-right">
+            <a href="#">INSTAGRAM</a>
+            <a href="#">NAVER</a>
+        </div>
+    </footer>
+
+    <script>
+        // Loader
+        window.addEventListener('load', () => {
+            setTimeout(() => document.getElementById('loader').classList.add('done'), 2200);
+        });
+
+        // Scroll animations
+        const fades = document.querySelectorAll('.fade-in');
+        const obs = new IntersectionObserver((entries) => {
+            entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('show'); });
+        }, { threshold: 0.15 });
+        fades.forEach(f => obs.observe(f));
+
+        // Parallax for space section
+        window.addEventListener('scroll', () => {
+            const space = document.querySelector('.space img');
+            if (space) {
+                const rect = space.getBoundingClientRect();
+                const speed = 0.3;
+                space.style.transform = `translateY(${rect.top * speed * -0.2}px)`;
+            }
+        });
+    </script>
+</body>
+</html>

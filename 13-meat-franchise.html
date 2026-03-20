@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>연탄집 YEONTAN HOUSE - 프리미엄 숯불 고깃집 프랜차이즈</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+--dark:#111;--darker:#0a0a0a;--amber:#FF8F00;--amber-light:#FFB300;--amber-dark:#E65100;
+--gray:#888;--gray-light:#bbb;--gray-dark:#333;--white:#f5f5f5;
+}
+html{scroll-behavior:smooth;font-size:16px}
+body{font-family:'Noto Sans KR','Outfit',sans-serif;background:var(--darker);color:var(--white);overflow-x:hidden;line-height:1.7}
+
+/* PRELOADER */
+#preloader{position:fixed;inset:0;z-index:99999;background:var(--darker);display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .8s,visibility .8s}
+#preloader.hide{opacity:0;visibility:hidden}
+.preloader-logo{font-family:'Outfit';font-size:2.4rem;font-weight:800;color:var(--amber);letter-spacing:4px;animation:pulse-glow 1.5s ease infinite}
+.preloader-bar{width:200px;height:3px;background:var(--gray-dark);margin-top:30px;border-radius:2px;overflow:hidden}
+.preloader-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--amber-dark),var(--amber),var(--amber-light));animation:load-bar 2s ease forwards}
+@keyframes load-bar{to{width:100%}}
+@keyframes pulse-glow{0%,100%{text-shadow:0 0 20px rgba(255,143,0,.3)}50%{text-shadow:0 0 40px rgba(255,143,0,.8),0 0 80px rgba(255,143,0,.3)}}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;width:100%;z-index:1000;padding:24px 60px;display:flex;align-items:center;justify-content:space-between;transition:all .4s}
+nav.scrolled{background:rgba(10,10,10,.95);backdrop-filter:blur(20px);padding:16px 60px;box-shadow:0 2px 40px rgba(255,143,0,.08)}
+.nav-logo{font-family:'Outfit';font-weight:800;font-size:1.5rem;color:var(--amber);letter-spacing:3px;text-decoration:none}
+.nav-links{display:flex;gap:32px;list-style:none}
+.nav-links a{color:var(--gray-light);text-decoration:none;font-size:.85rem;font-weight:500;letter-spacing:1px;transition:color .3s;font-family:'Outfit'}
+.nav-links a:hover{color:var(--amber)}
+.nav-cta{background:var(--amber);color:var(--dark);padding:10px 28px;border-radius:40px;font-weight:700;text-decoration:none;font-size:.85rem;letter-spacing:1px;transition:all .3s;font-family:'Outfit'}
+.nav-cta:hover{background:var(--amber-light);transform:translateY(-2px);box-shadow:0 8px 30px rgba(255,143,0,.4)}
+.nav-toggle{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none}
+.nav-toggle span{width:24px;height:2px;background:var(--white);transition:all .3s}
+
+/* HERO */
+.hero{position:relative;height:100vh;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.hero-video{position:absolute;inset:0;z-index:0}
+.hero-video img{width:100%;height:100%;object-fit:cover;filter:brightness(.35)contrast(1.1)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(10,10,10,.5),rgba(10,10,10,.3) 50%,rgba(10,10,10,.9));z-index:1}
+.hero-content{position:relative;z-index:3;text-align:center;max-width:900px;padding:0 20px}
+.hero-sub{font-family:'Outfit';font-size:.9rem;letter-spacing:8px;color:var(--amber);margin-bottom:20px;text-transform:uppercase;font-weight:600}
+.hero-title{font-size:clamp(3rem,8vw,6rem);font-weight:900;line-height:1.1;margin-bottom:16px;background:linear-gradient(135deg,var(--white),var(--gray-light));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero-title em{font-style:normal;-webkit-text-fill-color:var(--amber)}
+.hero-desc{font-size:1.1rem;color:var(--gray);max-width:600px;margin:0 auto 40px;font-weight:300}
+.hero-btn{display:inline-block;padding:16px 48px;background:var(--amber);color:var(--dark);font-weight:700;font-size:1rem;border-radius:50px;text-decoration:none;letter-spacing:1px;transition:all .3s;font-family:'Outfit'}
+.hero-btn:hover{background:var(--amber-light);transform:translateY(-3px);box-shadow:0 12px 40px rgba(255,143,0,.5)}
+.hero-scroll{position:absolute;bottom:40px;left:50%;transform:translateX(-50%);z-index:3;display:flex;flex-direction:column;align-items:center;gap:8px;color:var(--gray);font-size:.75rem;letter-spacing:2px}
+.hero-scroll span{width:1px;height:50px;background:linear-gradient(to bottom,var(--amber),transparent);animation:scroll-line 2s ease infinite}
+@keyframes scroll-line{0%{opacity:0;transform:scaleY(0);transform-origin:top}50%{opacity:1;transform:scaleY(1)}100%{opacity:0;transform:scaleY(0);transform-origin:bottom}}
+
+/* EMBER PARTICLES */
+#ember-canvas{position:absolute;inset:0;z-index:2;pointer-events:none}
+
+/* MARQUEE BAND */
+.marquee-band{background:var(--amber);padding:14px 0;overflow:hidden;white-space:nowrap}
+.marquee-track{display:flex;animation:marquee-scroll 30s linear infinite}
+.marquee-track span{font-family:'Outfit';font-size:.85rem;font-weight:700;color:var(--dark);letter-spacing:4px;text-transform:uppercase;padding:0 40px;flex-shrink:0}
+@keyframes marquee-scroll{to{transform:translateX(-50%)}}
+
+/* SECTION COMMON */
+.section{padding:120px 60px}
+.section-label{font-family:'Outfit';font-size:.8rem;letter-spacing:6px;color:var(--amber);text-transform:uppercase;margin-bottom:12px;font-weight:600}
+.section-title{font-size:clamp(2rem,4vw,3rem);font-weight:900;margin-bottom:20px;line-height:1.2}
+.section-desc{color:var(--gray);font-size:1rem;max-width:600px;font-weight:300;line-height:1.8}
+
+/* BRAND GRID */
+.brand-section{background:var(--dark)}
+.brand-grid{display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;max-width:1200px;margin:0 auto}
+.brand-img{position:relative;border-radius:16px;overflow:hidden;aspect-ratio:4/3}
+.brand-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.brand-img:hover img{transform:scale(1.05)}
+.brand-img::after{content:'';position:absolute;inset:0;border:1px solid rgba(255,143,0,.2);border-radius:16px}
+.brand-text .section-desc{margin-bottom:40px}
+.brand-stats{display:flex;gap:40px}
+.brand-stat h3{font-family:'Outfit';font-size:2.4rem;font-weight:800;color:var(--amber)}
+.brand-stat p{font-size:.8rem;color:var(--gray);margin-top:4px}
+
+/* MENU CARDS */
+.menu-section{background:var(--darker)}
+.menu-header{text-align:center;margin-bottom:60px}
+.menu-header .section-desc{margin:0 auto}
+.menu-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;max-width:1200px;margin:0 auto}
+.menu-card{background:var(--dark);border-radius:16px;overflow:hidden;transition:all .4s;border:1px solid rgba(255,255,255,.05)}
+.menu-card:hover{transform:translateY(-8px);box-shadow:0 20px 60px rgba(255,143,0,.15);border-color:rgba(255,143,0,.2)}
+.menu-card-img{aspect-ratio:3/2;overflow:hidden}
+.menu-card-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.menu-card:hover .menu-card-img img{transform:scale(1.1)}
+.menu-card-body{padding:24px}
+.menu-card-name{font-size:1.2rem;font-weight:700;margin-bottom:6px}
+.menu-card-desc{font-size:.85rem;color:var(--gray);font-weight:300}
+.menu-card-price{font-family:'Outfit';font-size:1.1rem;font-weight:700;color:var(--amber);margin-top:12px}
+
+/* VIDEO BAND */
+.video-band{position:relative;height:60vh;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.video-band img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:brightness(.3)}
+.video-band-content{position:relative;z-index:2;text-align:center}
+.video-band-title{font-size:clamp(2rem,5vw,4rem);font-weight:900;margin-bottom:16px}
+.video-band-desc{color:var(--gray-light);font-size:1.1rem;font-weight:300}
+
+/* REVENUE */
+.revenue-section{background:var(--dark)}
+.revenue-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:30px;max-width:1200px;margin:40px auto 0}
+.revenue-card{background:linear-gradient(135deg,rgba(255,143,0,.08),rgba(255,143,0,.02));border:1px solid rgba(255,143,0,.15);border-radius:16px;padding:40px;text-align:center;transition:all .4s}
+.revenue-card:hover{transform:translateY(-6px);border-color:var(--amber);box-shadow:0 12px 40px rgba(255,143,0,.15)}
+.revenue-icon{font-size:2.4rem;margin-bottom:16px}
+.revenue-num{font-family:'Outfit';font-size:2.8rem;font-weight:800;color:var(--amber)}
+.revenue-unit{font-family:'Outfit';font-size:1rem;color:var(--amber);font-weight:600}
+.revenue-label{font-size:.85rem;color:var(--gray);margin-top:8px}
+
+/* BENEFITS */
+.benefits-section{background:var(--darker)}
+.benefits-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;max-width:1200px;margin:40px auto 0}
+.benefit-card{background:var(--dark);border:1px solid rgba(255,255,255,.05);border-radius:16px;padding:40px;transition:all .4s}
+.benefit-card:hover{border-color:rgba(255,143,0,.3);transform:translateY(-4px)}
+.benefit-num{font-family:'Outfit';font-size:3rem;font-weight:900;color:rgba(255,143,0,.15);margin-bottom:16px}
+.benefit-title{font-size:1.2rem;font-weight:700;margin-bottom:12px}
+.benefit-desc{font-size:.9rem;color:var(--gray);font-weight:300;line-height:1.8}
+
+/* FORM */
+.form-section{background:var(--dark);position:relative;overflow:hidden}
+.form-section::before{content:'';position:absolute;top:-200px;right:-200px;width:500px;height:500px;background:radial-gradient(circle,rgba(255,143,0,.08),transparent 70%);pointer-events:none}
+.form-wrapper{max-width:700px;margin:0 auto}
+.form-wrapper .section-title{text-align:center}
+.form-wrapper .section-desc{text-align:center;margin:0 auto 50px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.form-group{display:flex;flex-direction:column}
+.form-group.full{grid-column:1/-1}
+.form-group label{font-size:.8rem;font-weight:500;color:var(--gray-light);margin-bottom:8px;letter-spacing:1px}
+.form-group input,.form-group select,.form-group textarea{background:var(--darker);border:1px solid var(--gray-dark);border-radius:12px;padding:14px 18px;color:var(--white);font-size:.95rem;font-family:'Noto Sans KR';transition:border-color .3s;outline:none}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--amber)}
+.form-group textarea{resize:vertical;min-height:120px}
+.form-submit{display:block;width:100%;margin-top:30px;padding:18px;background:var(--amber);color:var(--dark);border:none;border-radius:50px;font-size:1rem;font-weight:700;cursor:pointer;font-family:'Outfit';letter-spacing:2px;transition:all .3s}
+.form-submit:hover{background:var(--amber-light);box-shadow:0 12px 40px rgba(255,143,0,.4)}
+
+/* FOOTER */
+footer{background:var(--darker);border-top:1px solid rgba(255,255,255,.05);padding:60px}
+.footer-inner{max-width:1200px;margin:0 auto;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:20px}
+.footer-logo{font-family:'Outfit';font-weight:800;font-size:1.3rem;color:var(--amber);letter-spacing:3px}
+.footer-copy{font-size:.8rem;color:var(--gray)}
+.footer-links{display:flex;gap:20px}
+.footer-links a{color:var(--gray);font-size:.8rem;text-decoration:none;transition:color .3s}
+.footer-links a:hover{color:var(--amber)}
+
+/* FLOATING CTA */
+.floating-cta{position:fixed;bottom:30px;right:30px;z-index:999;background:var(--amber);color:var(--dark);padding:16px 32px;border-radius:50px;font-weight:700;font-family:'Outfit';text-decoration:none;box-shadow:0 8px 30px rgba(255,143,0,.4);transition:all .3s;display:flex;align-items:center;gap:10px;font-size:.9rem;letter-spacing:1px;opacity:0;transform:translateY(20px)}
+.floating-cta.show{opacity:1;transform:translateY(0)}
+.floating-cta:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(255,143,0,.6)}
+.floating-cta .pulse{width:10px;height:10px;background:var(--dark);border-radius:50%;animation:cta-pulse 2s ease infinite}
+@keyframes cta-pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.5)}}
+
+/* REVEAL */
+.reveal{opacity:0;transform:translateY(50px);transition:all .8s cubic-bezier(.25,.46,.45,.94)}
+.reveal.active{opacity:1;transform:translateY(0)}
+.reveal-left{opacity:0;transform:translateX(-50px);transition:all .8s cubic-bezier(.25,.46,.45,.94)}
+.reveal-left.active{opacity:1;transform:translateX(0)}
+.reveal-right{opacity:0;transform:translateX(50px);transition:all .8s cubic-bezier(.25,.46,.45,.94)}
+.reveal-right.active{opacity:1;transform:translateX(0)}
+
+/* MOBILE */
+@media(max-width:1024px){
+.brand-grid{grid-template-columns:1fr;gap:40px}
+.revenue-grid{grid-template-columns:repeat(2,1fr)}
+.benefits-grid{grid-template-columns:1fr}
+}
+@media(max-width:768px){
+nav{padding:16px 20px}
+nav.scrolled{padding:12px 20px}
+.nav-links{display:none;position:absolute;top:100%;left:0;width:100%;background:rgba(10,10,10,.98);flex-direction:column;padding:20px;gap:16px}
+.nav-links.open{display:flex}
+.nav-toggle{display:flex}
+.section{padding:80px 20px}
+.hero-sub{font-size:.75rem;letter-spacing:4px}
+.hero-title{font-size:2.4rem}
+.menu-grid{grid-template-columns:1fr}
+.revenue-grid{grid-template-columns:1fr}
+.form-grid{grid-template-columns:1fr}
+.form-group.full{grid-column:auto}
+.footer-inner{flex-direction:column;text-align:center}
+.floating-cta{bottom:20px;right:20px;padding:14px 24px;font-size:.8rem}
+.brand-stats{flex-direction:column;gap:20px}
+}
+</style>
+</head>
+<body>
+<!-- PRELOADER -->
+<div id="preloader">
+<div class="preloader-logo">YEONTAN HOUSE</div>
+<div class="preloader-bar"><span></span></div>
+</div>
+
+<!-- NAV -->
+<nav id="nav">
+<a href="#" class="nav-logo">YEONTAN HOUSE</a>
+<ul class="nav-links" id="navLinks">
+<li><a href="#brand">브랜드</a></li>
+<li><a href="#menu">메뉴</a></li>
+<li><a href="#revenue">수익분석</a></li>
+<li><a href="#benefits">창업혜택</a></li>
+<li><a href="#contact">상담신청</a></li>
+</ul>
+<a href="#contact" class="nav-cta">가맹상담</a>
+<button class="nav-toggle" id="navToggle" aria-label="메뉴">
+<span></span><span></span><span></span>
+</button>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+<div class="hero-video">
+<img src="https://images.unsplash.com/photo-1558030006-450675393462?w=1920&q=80" alt="고기 굽는 장면">
+</div>
+<div class="hero-overlay"></div>
+<canvas id="ember-canvas"></canvas>
+<div class="hero-content">
+<p class="hero-sub reveal">PREMIUM CHARCOAL GRILL FRANCHISE</p>
+<h1 class="hero-title reveal">연탄 위에서<br><em>피어나는</em> 맛</h1>
+<p class="hero-desc reveal">전통 연탄 화로 위 최상급 고기의 감동. 불멍과 함께하는 프리미엄 고깃집 프랜차이즈, 연탄집.</p>
+<a href="#contact" class="hero-btn reveal">가맹 상담 신청</a>
+</div>
+<div class="hero-scroll">
+SCROLL
+<span></span>
+</div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-band">
+<div class="marquee-track">
+<span>🔥 연탄집 YEONTAN HOUSE</span><span>★ 전국 150호점 돌파</span><span>🔥 월 평균 매출 8,500만원</span><span>★ 2024 프랜차이즈 대상</span><span>🔥 연탄집 YEONTAN HOUSE</span><span>★ 전국 150호점 돌파</span><span>🔥 월 평균 매출 8,500만원</span><span>★ 2024 프랜차이즈 대상</span>
+<span>🔥 연탄집 YEONTAN HOUSE</span><span>★ 전국 150호점 돌파</span><span>🔥 월 평균 매출 8,500만원</span><span>★ 2024 프랜차이즈 대상</span><span>🔥 연탄집 YEONTAN HOUSE</span><span>★ 전국 150호점 돌파</span><span>🔥 월 평균 매출 8,500만원</span><span>★ 2024 프랜차이즈 대상</span>
+</div>
+</div>
+
+<!-- BRAND -->
+<section class="section brand-section" id="brand">
+<div class="brand-grid">
+<div class="brand-img reveal-left">
+<img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=800&q=80" alt="연탄집 브랜드">
+</div>
+<div class="brand-text reveal-right">
+<p class="section-label">About YEONTAN HOUSE</p>
+<h2 class="section-title">연탄 한 장의<br>정성과 감동</h2>
+<p class="section-desc">연탄집은 전통 연탄 화로에서 구워내는 프리미엄 고기와 따뜻한 감성을 전하는 브랜드입니다. 높은 불맛과 연탄의 은은한 향이 만들어내는 특별한 맛의 경험을 선사합니다.</p>
+<div class="brand-stats">
+<div class="brand-stat"><h3><span class="counter" data-target="150">0</span>+</h3><p>전국 가맹점</p></div>
+<div class="brand-stat"><h3><span class="counter" data-target="97">0</span>%</h3><p>고객 재방문율</p></div>
+<div class="brand-stat"><h3><span class="counter" data-target="8">0</span>년</h3><p>브랜드 역사</p></div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- MENU -->
+<section class="section menu-section" id="menu">
+<div class="menu-header reveal">
+<p class="section-label">Signature Menu</p>
+<h2 class="section-title">연탄 위의 명작</h2>
+<p class="section-desc">최상급 한우와 국내산 돼지고기, 연탄 불 위에서 완성되는 시그니처 메뉴</p>
+</div>
+<div class="menu-grid">
+<div class="menu-card reveal">
+<div class="menu-card-img"><img src="https://images.unsplash.com/photo-1529694157872-4e0c0f3b238b?w=600&q=80" alt="한우 삼겹살"></div>
+<div class="menu-card-body">
+<h3 class="menu-card-name">한우 삼겹살</h3>
+<p class="menu-card-desc">1++ 등급 한우 삼겹살, 연탄 불맛의 정수</p>
+<p class="menu-card-price">29,900원</p>
+</div>
+</div>
+<div class="menu-card reveal">
+<div class="menu-card-img"><img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80" alt="프리미엄 목살"></div>
+<div class="menu-card-body">
+<h3 class="menu-card-name">프리미엄 목살</h3>
+<p class="menu-card-desc">두툼하게 썰어낸 국내산 목살의 육즙</p>
+<p class="menu-card-price">19,900원</p>
+</div>
+</div>
+<div class="menu-card reveal">
+<div class="menu-card-img"><img src="https://images.unsplash.com/photo-1588168333986-5078d3ae3976?w=600&q=80" alt="양념 갈비"></div>
+<div class="menu-card-body">
+<h3 class="menu-card-name">양념 갈비</h3>
+<p class="menu-card-desc">비법 양념장에 재운 프리미엄 돼지갈비</p>
+<p class="menu-card-price">22,900원</p>
+</div>
+</div>
+<div class="menu-card reveal">
+<div class="menu-card-img"><img src="https://images.unsplash.com/photo-1547592180-85f173990554?w=600&q=80" alt="된장찌개"></div>
+<div class="menu-card-body">
+<h3 class="menu-card-name">된장찌개</h3>
+<p class="menu-card-desc">3년 숙성 된장으로 끓여낸 깊은 맛</p>
+<p class="menu-card-price">8,900원</p>
+</div>
+</div>
+<div class="menu-card reveal">
+<div class="menu-card-img"><img src="https://images.unsplash.com/photo-1583224964978-2257b960c3d3?w=600&q=80" alt="물냉면"></div>
+<div class="menu-card-body">
+<h3 class="menu-card-name">물냉면</h3>
+<p class="menu-card-desc">육수 48시간 우려낸 시원한 물냉면</p>
+<p class="menu-card-price">9,900원</p>
+</div>
+</div>
+<div class="menu-card reveal">
+<div class="menu-card-img"><img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?w=600&q=80" alt="소갈비살"></div>
+<div class="menu-card-body">
+<h3 class="menu-card-name">소갈비살</h3>
+<p class="menu-card-desc">부드러운 결과 풍부한 마블링의 극치</p>
+<p class="menu-card-price">34,900원</p>
+</div>
+</div>
+</div>
+</section>
+
+<!-- VIDEO BAND -->
+<div class="video-band">
+<img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1920&q=80" alt="불멍 비주얼">
+<div class="video-band-content reveal">
+<h2 class="video-band-title">불멍의 감성<br>연탄의 온기</h2>
+<p class="video-band-desc">타오르는 연탄 위, 지글거리는 고기의 소리가 만드는 힐링</p>
+</div>
+</div>
+
+<!-- REVENUE -->
+<section class="section revenue-section" id="revenue">
+<div style="text-align:center;margin-bottom:60px" class="reveal">
+<p class="section-label">Revenue Analysis</p>
+<h2 class="section-title">검증된 수익 구조</h2>
+<p class="section-desc" style="margin:0 auto">전국 가맹점 평균 데이터 기반 투명한 수익 분석</p>
+</div>
+<div class="revenue-grid">
+<div class="revenue-card reveal">
+<div class="revenue-icon">💰</div>
+<div class="revenue-num"><span class="counter" data-target="8500">0</span></div>
+<div class="revenue-unit">만원 / 월</div>
+<div class="revenue-label">월 평균 매출</div>
+</div>
+<div class="revenue-card reveal">
+<div class="revenue-icon">📈</div>
+<div class="revenue-num"><span class="counter" data-target="35">0</span></div>
+<div class="revenue-unit">%</div>
+<div class="revenue-label">영업 이익률</div>
+</div>
+<div class="revenue-card reveal">
+<div class="revenue-icon">⏱️</div>
+<div class="revenue-num"><span class="counter" data-target="14">0</span></div>
+<div class="revenue-unit">개월</div>
+<div class="revenue-label">평균 투자 회수</div>
+</div>
+<div class="revenue-card reveal">
+<div class="revenue-icon">🏆</div>
+<div class="revenue-num"><span class="counter" data-target="92">0</span></div>
+<div class="revenue-unit">%</div>
+<div class="revenue-label">가맹점 생존율</div>
+</div>
+</div>
+</section>
+
+<!-- BENEFITS -->
+<section class="section benefits-section" id="benefits">
+<div style="text-align:center;margin-bottom:60px" class="reveal">
+<p class="section-label">Franchise Benefits</p>
+<h2 class="section-title">연탄집만의 창업 혜택</h2>
+</div>
+<div class="benefits-grid">
+<div class="benefit-card reveal">
+<div class="benefit-num">01</div>
+<h3 class="benefit-title">로열티 0원 정책</h3>
+<p class="benefit-desc">가맹점 초기 안정화를 위해 첫 1년간 로열티를 면제합니다. 안정적인 매출 달성 후 합리적인 수준으로 운영됩니다.</p>
+</div>
+<div class="benefit-card reveal">
+<div class="benefit-num">02</div>
+<h3 class="benefit-title">인테리어 전액 지원</h3>
+<p class="benefit-desc">연탄집만의 시그니처 공간을 본사가 직접 설계하고 시공합니다. 오픈까지 A to Z 완벽 지원.</p>
+</div>
+<div class="benefit-card reveal">
+<div class="benefit-num">03</div>
+<h3 class="benefit-title">전문 교육 시스템</h3>
+<p class="benefit-desc">4주간의 체계적인 조리 및 서비스 교육. 연탄 화로 운영 노하우를 완벽하게 전수합니다.</p>
+</div>
+<div class="benefit-card reveal">
+<div class="benefit-num">04</div>
+<h3 class="benefit-title">자체 물류 시스템</h3>
+<p class="benefit-desc">전국 콜드체인 물류망을 통해 최상급 식재료를 안정적으로 공급합니다. 원가 절감의 핵심.</p>
+</div>
+<div class="benefit-card reveal">
+<div class="benefit-num">05</div>
+<h3 class="benefit-title">마케팅 본사 주도</h3>
+<p class="benefit-desc">SNS, 배달앱, 지역 마케팅까지 본사가 직접 관리합니다. 가맹점은 운영에만 집중하세요.</p>
+</div>
+<div class="benefit-card reveal">
+<div class="benefit-num">06</div>
+<h3 class="benefit-title">상권 분석 보장</h3>
+<p class="benefit-desc">빅데이터 기반 상권 분석으로 최적의 입지를 선정합니다. 개점 전 매출 예측 리포트 제공.</p>
+</div>
+</div>
+</section>
+
+<!-- CONTACT FORM -->
+<section class="section form-section" id="contact">
+<div class="form-wrapper">
+<p class="section-label" style="text-align:center">Contact Us</p>
+<h2 class="section-title reveal">가맹 상담 신청</h2>
+<p class="section-desc reveal">연탄집과 함께할 예비 점주님의 소중한 문의를 기다립니다.</p>
+<form class="reveal" onsubmit="event.preventDefault();alert('상담 신청이 완료되었습니다.');">
+<div class="form-grid">
+<div class="form-group">
+<label>이름</label>
+<input type="text" placeholder="홍길동" required>
+</div>
+<div class="form-group">
+<label>연락처</label>
+<input type="tel" placeholder="010-0000-0000" required>
+</div>
+<div class="form-group">
+<label>이메일</label>
+<input type="email" placeholder="email@example.com">
+</div>
+<div class="form-group">
+<label>희망 지역</label>
+<select>
+<option value="">지역 선택</option>
+<option>서울</option><option>경기</option><option>인천</option>
+<option>대전</option><option>대구</option><option>부산</option>
+<option>광주</option><option>울산</option><option>세종</option>
+<option>강원</option><option>충북</option><option>충남</option>
+<option>전북</option><option>전남</option><option>경북</option>
+<option>경남</option><option>제주</option>
+</select>
+</div>
+<div class="form-group full">
+<label>문의 내용</label>
+<textarea placeholder="궁금하신 점을 자유롭게 작성해주세요."></textarea>
+</div>
+</div>
+<button type="submit" class="form-submit">상담 신청하기 →</button>
+</form>
+</div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+<div class="footer-inner">
+<div class="footer-logo">YEONTAN HOUSE</div>
+<p class="footer-copy">&copy; 2026 연탄집. All Rights Reserved.</p>
+<div class="footer-links">
+<a href="#">개인정보처리방침</a>
+<a href="#">이용약관</a>
+<a href="#">사업자정보</a>
+</div>
+</div>
+</footer>
+
+<!-- FLOATING CTA -->
+<a href="#contact" class="floating-cta" id="floatingCta">
+<span class="pulse"></span>
+가맹 상담 신청
+</a>
+
+<script>
+// PRELOADER
+window.addEventListener('load',()=>{
+  setTimeout(()=>document.getElementById('preloader').classList.add('hide'),2200);
+});
+
+// NAV SCROLL
+const nav=document.getElementById('nav');
+window.addEventListener('scroll',()=>{
+  nav.classList.toggle('scrolled',window.scrollY>80);
+  document.getElementById('floatingCta').classList.toggle('show',window.scrollY>600);
+});
+
+// NAV TOGGLE
+document.getElementById('navToggle').addEventListener('click',function(){
+  document.getElementById('navLinks').classList.toggle('open');
+  this.classList.toggle('active');
+});
+
+// SCROLL REVEAL
+function revealOnScroll(){
+  document.querySelectorAll('.reveal,.reveal-left,.reveal-right').forEach(el=>{
+    const top=el.getBoundingClientRect().top;
+    if(top<window.innerHeight-80) el.classList.add('active');
+  });
+}
+window.addEventListener('scroll',revealOnScroll);
+window.addEventListener('load',()=>setTimeout(revealOnScroll,2400));
+
+// COUNTER
+function animateCounters(){
+  document.querySelectorAll('.counter').forEach(c=>{
+    const rect=c.getBoundingClientRect();
+    if(rect.top<window.innerHeight&&!c.dataset.done){
+      c.dataset.done='1';
+      const target=+c.dataset.target;
+      const dur=2000;
+      const start=performance.now();
+      function step(now){
+        const p=Math.min((now-start)/dur,1);
+        const ease=1-Math.pow(1-p,3);
+        c.textContent=Math.floor(target*ease).toLocaleString();
+        if(p<1) requestAnimationFrame(step);
+        else c.textContent=target.toLocaleString();
+      }
+      requestAnimationFrame(step);
+    }
+  });
+}
+window.addEventListener('scroll',animateCounters);
+
+// EMBER / FIRE PARTICLES
+(function(){
+  const canvas=document.getElementById('ember-canvas');
+  const ctx=canvas.getContext('2d');
+  let W,H;
+  function resize(){W=canvas.width=canvas.parentElement.offsetWidth;H=canvas.height=canvas.parentElement.offsetHeight}
+  resize();
+  window.addEventListener('resize',resize);
+  class Ember{
+    constructor(){this.reset()}
+    reset(){
+      this.x=Math.random()*W;
+      this.y=H+10;
+      this.size=Math.random()*4+1;
+      this.speedY=Math.random()*2+.5;
+      this.speedX=(Math.random()-.5)*1;
+      this.opacity=Math.random()*.8+.2;
+      this.life=Math.random()*200+100;
+      this.age=0;
+      this.color=`hsl(${Math.random()*30+15},100%,${Math.random()*30+50}%)`;
+    }
+    update(){
+      this.y-=this.speedY;
+      this.x+=this.speedX+Math.sin(this.age*.02)*.5;
+      this.age++;
+      this.opacity=Math.max(0,(1-this.age/this.life)*.8);
+      if(this.age>this.life||this.y<-10) this.reset();
+    }
+    draw(){
+      ctx.save();
+      ctx.globalAlpha=this.opacity;
+      ctx.fillStyle=this.color;
+      ctx.shadowColor=this.color;
+      ctx.shadowBlur=this.size*4;
+      ctx.beginPath();
+      ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+  const embers=Array.from({length:60},()=>new Ember());
+  // Smoke
+  class Smoke{
+    constructor(){this.reset()}
+    reset(){
+      this.x=W*.3+Math.random()*W*.4;
+      this.y=H+20;
+      this.size=Math.random()*60+30;
+      this.speedY=Math.random()*1+.3;
+      this.speedX=(Math.random()-.5)*.3;
+      this.opacity=Math.random()*.06+.02;
+      this.life=Math.random()*300+200;
+      this.age=0;
+    }
+    update(){
+      this.y-=this.speedY;
+      this.x+=this.speedX;
+      this.size+=.3;
+      this.age++;
+      const p=this.age/this.life;
+      this.opacity=p<.3?p/.3*.06:(1-p)*.06;
+      if(this.age>this.life) this.reset();
+    }
+    draw(){
+      ctx.save();
+      ctx.globalAlpha=this.opacity;
+      ctx.fillStyle='#aaa';
+      ctx.beginPath();
+      ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
+      ctx.fill();
+      ctx.restore();
+    }
+  }
+  const smokes=Array.from({length:15},()=>new Smoke());
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    smokes.forEach(s=>{s.update();s.draw()});
+    embers.forEach(e=>{e.update();e.draw()});
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+</script>
+</body>
+</html>

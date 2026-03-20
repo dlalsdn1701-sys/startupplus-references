@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BLUEWAVE COFFEE — 도심 속 휴양지 카페 프랜차이즈</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@200;300;400;500;700;900&family=Playfair+Display:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+    <style>
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{
+            --ocean:#0077B6;--sky:#00B4D8;--sky-light:#48CAE4;
+            --aqua:#ADE8F4;--ice:#CAF0F8;--navy:#023E7D;
+            --navy-deep:#002855;--sand:#F5E6CA;--sand-light:#FFFCF5;
+            --white:#fff;--off-white:#F7FAFC;--dark:#0B1724;
+            --text:#1B2A3D;--gray:#64748B;--gray-light:#CBD5E1;
+            --radius:20px;
+        }
+        html{scroll-behavior:smooth}
+        body{font-family:'Noto Sans KR',sans-serif;color:var(--text);background:var(--white);overflow-x:hidden}
+        .eng{font-family:'Outfit',sans-serif}
+
+        /* ===== LOADER ===== */
+        #loader{position:fixed;inset:0;background:var(--dark);z-index:10000;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:24px;transition:opacity .8s,visibility .8s}
+        #loader.out{opacity:0;visibility:hidden}
+        #loader img{width:80px;border-radius:16px;opacity:0;animation:lIn .8s ease .3s forwards}
+        #loader .bar{width:100px;height:2px;background:rgba(0,180,216,.15);border-radius:2px;overflow:hidden}
+        #loader .bar i{display:block;width:100%;height:100%;background:var(--sky);animation:lBar 1.8s ease forwards;transform-origin:left}
+        @keyframes lIn{to{opacity:1}}
+        @keyframes lBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+        /* ===== NAV ===== */
+        header{position:fixed;top:0;left:0;right:0;z-index:999;padding:20px 48px;display:flex;justify-content:space-between;align-items:center;transition:all .35s}
+        header.solid{background:rgba(255,255,255,.92);backdrop-filter:blur(16px);box-shadow:0 1px 24px rgba(0,0,0,.06);padding:12px 48px}
+        header.solid .h-logo-text{color:var(--navy)}
+        header.solid .h-links a{color:var(--text)}
+        header.solid .h-cta{background:var(--sky);color:#fff;border-color:var(--sky)}
+        .h-logo{display:flex;align-items:center;gap:10px;text-decoration:none}
+        .h-logo img{width:40px;border-radius:10px}
+        .h-logo-text{font-family:'Outfit',sans-serif;font-size:1.1rem;font-weight:800;letter-spacing:2px;color:#fff;transition:color .3s}
+        .h-logo-text span{color:var(--sky)}
+        .h-right{display:flex;align-items:center;gap:28px}
+        .h-links{display:flex;gap:28px}
+        .h-links a{color:rgba(255,255,255,.8);text-decoration:none;font-family:'Outfit',sans-serif;font-size:.78rem;letter-spacing:1.5px;font-weight:500;transition:color .3s}
+        .h-links a:hover{color:var(--sky)}
+        .h-cta{padding:9px 22px;border:1.5px solid rgba(255,255,255,.3);border-radius:28px;color:#fff;text-decoration:none;font-family:'Outfit',sans-serif;font-size:.78rem;font-weight:600;letter-spacing:1px;transition:all .3s}
+        .h-cta:hover{background:var(--sky);border-color:var(--sky)}
+
+        /* ===== HERO ===== */
+        .hero{height:100vh;min-height:700px;position:relative;display:flex;align-items:center;justify-content:center;overflow:hidden;background:var(--dark)}
+        .hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .hero-fallback{position:absolute;inset:0;background:url('bw-assets/hero-bg.jpeg') center/cover}
+        .hero-dim{position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,23,36,.55) 0%,rgba(2,62,125,.4) 40%,rgba(11,23,36,.8) 100%)}
+        .hero-inner{position:relative;z-index:2;text-align:center;color:#fff;padding:0 24px;max-width:780px}
+        .hero-logo{width:72px;border-radius:16px;margin:0 auto 28px;box-shadow:0 8px 32px rgba(0,0,0,.25);opacity:0;animation:hUp .8s ease 1.8s forwards}
+        .hero-tag{display:inline-block;background:rgba(0,180,216,.12);border:1px solid rgba(0,180,216,.25);padding:7px 20px;border-radius:28px;font-family:'Outfit',sans-serif;font-size:.7rem;letter-spacing:3px;color:var(--aqua);margin-bottom:24px;backdrop-filter:blur(8px);opacity:0;animation:hUp .8s ease 2s forwards}
+        .hero h1{font-family:'Outfit',sans-serif;font-size:4.2rem;font-weight:900;line-height:1.12;letter-spacing:-1px;margin-bottom:14px;text-shadow:0 4px 32px rgba(0,0,0,.35);opacity:0;animation:hUp 1s ease 2.2s forwards}
+        .hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--sky),var(--aqua));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+        .hero-sub{font-family:'Playfair Display',serif;font-size:1.35rem;font-style:italic;color:var(--sand);margin-bottom:16px;opacity:0;animation:hUp .8s ease 2.5s forwards}
+        .hero-desc{font-size:.95rem;color:rgba(255,255,255,.65);font-weight:300;line-height:1.8;margin-bottom:36px;opacity:0;animation:hUp .8s ease 2.7s forwards}
+        .hero-btns{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;opacity:0;animation:hUp .8s ease 2.9s forwards}
+        .btn-glow{padding:15px 38px;background:linear-gradient(135deg,var(--sky),var(--ocean));color:#fff;border-radius:50px;text-decoration:none;font-weight:700;font-size:.92rem;box-shadow:0 6px 28px rgba(0,180,216,.4);transition:all .3s}
+        .btn-glow:hover{transform:translateY(-2px);box-shadow:0 10px 40px rgba(0,180,216,.55)}
+        .btn-glass{padding:15px 34px;border:1.5px solid rgba(255,255,255,.25);color:#fff;border-radius:50px;text-decoration:none;font-weight:500;font-size:.92rem;backdrop-filter:blur(8px);transition:all .3s}
+        .btn-glass:hover{background:rgba(255,255,255,.08);border-color:var(--sky)}
+        .hero-wave{position:absolute;bottom:-2px;left:0;width:100%;z-index:3;line-height:0}
+        .hero-wave svg{width:100%;height:auto}
+        @keyframes hUp{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+
+        /* ===== SHARED ===== */
+        .container{max-width:1200px;margin:0 auto;padding:0 32px}
+        .label{font-family:'Outfit',sans-serif;font-size:.72rem;letter-spacing:4px;color:var(--sky);font-weight:700;margin-bottom:10px}
+        .stitle{font-size:2.5rem;font-weight:900;line-height:1.25;margin-bottom:16px;color:var(--navy-deep)}
+        .stitle em{font-style:normal;color:var(--sky)}
+        .sdesc{font-size:.95rem;color:var(--gray);font-weight:300;line-height:1.9;max-width:560px}
+        .sr{opacity:0;transform:translateY(28px);transition:all .8s cubic-bezier(.16,1,.3,1)}
+        .sr.on{opacity:1;transform:translateY(0)}
+        .d1{transition-delay:.1s}.d2{transition-delay:.2s}.d3{transition-delay:.3s}.d4{transition-delay:.4s}
+
+        /* ===== BRAND ===== */
+        .brand{padding:130px 0;background:var(--white)}
+        .brand-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:70px;align-items:center}
+        .brand-imgs{position:relative;height:520px}
+        .brand-img1{width:62%;height:400px;object-fit:cover;border-radius:var(--radius);position:absolute;top:0;left:0;box-shadow:0 24px 64px rgba(0,119,182,.12)}
+        .brand-img2{width:48%;height:300px;object-fit:cover;border-radius:var(--radius);position:absolute;bottom:0;right:0;border:5px solid var(--white);box-shadow:0 16px 48px rgba(0,0,0,.08)}
+        .brand-badge{position:absolute;top:20px;right:60px;width:100px;height:100px;border-radius:50%;background:linear-gradient(135deg,var(--sky),var(--ocean));display:flex;flex-direction:column;align-items:center;justify-content:center;color:#fff;z-index:2;box-shadow:0 8px 24px rgba(0,180,216,.35);animation:float 3s ease infinite}
+        .brand-badge b{font-family:'Outfit',sans-serif;font-size:1.8rem;font-weight:900;line-height:1}
+        .brand-badge span{font-size:.55rem;letter-spacing:1px}
+        @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+        .brand-features{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}
+        .brand-feat{display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--ice);border-radius:14px;font-size:.86rem;font-weight:600;color:var(--navy)}
+        .brand-feat i{font-style:normal;font-size:1.2rem}
+
+        /* ===== VISUAL BAND ===== */
+        .vband{position:relative;height:420px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+        .vband video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+        .vband-img{position:absolute;inset:0;background:center/cover}
+        .vband-dim{position:absolute;inset:0;background:linear-gradient(135deg,rgba(2,62,125,.7),rgba(0,119,182,.5))}
+        .vband-inner{position:relative;z-index:2;text-align:center;color:#fff;padding:0 24px}
+        .vband-inner h2{font-family:'Outfit',sans-serif;font-size:2.6rem;font-weight:800;margin-bottom:10px;text-shadow:0 2px 16px rgba(0,0,0,.3)}
+        .vband-inner p{font-size:1.05rem;font-weight:300;opacity:.85}
+
+        /* ===== GALLERY ===== */
+        .gallery{padding:110px 0;background:var(--off-white);overflow:hidden}
+        .gallery-header{text-align:center;margin-bottom:48px}
+        .gtrack{display:flex;gap:14px;animation:gScroll 40s linear infinite;width:max-content}
+        .gtrack img{width:320px;height:220px;object-fit:cover;border-radius:16px;flex-shrink:0;box-shadow:0 6px 24px rgba(0,0,0,.06)}
+        .gtrack2{display:flex;gap:14px;animation:gScroll2 45s linear infinite;width:max-content;margin-top:14px}
+        .gtrack2 img{width:320px;height:220px;object-fit:cover;border-radius:16px;flex-shrink:0;box-shadow:0 6px 24px rgba(0,0,0,.06)}
+        @keyframes gScroll{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+        @keyframes gScroll2{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+
+        /* ===== WHY ===== */
+        .why{padding:130px 0;background:var(--white)}
+        .why-header{text-align:center;margin-bottom:64px}
+        .why-header .sdesc{margin:0 auto}
+        .why-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+        .wcard{background:var(--off-white);border-radius:var(--radius);overflow:hidden;transition:transform .4s,box-shadow .4s}
+        .wcard:hover{transform:translateY(-8px);box-shadow:0 20px 56px rgba(0,119,182,.1)}
+        .wcard-img{height:210px;overflow:hidden}
+        .wcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+        .wcard:hover .wcard-img img{transform:scale(1.05)}
+        .wcard-body{padding:28px}
+        .wcard-icon{width:48px;height:48px;border-radius:14px;background:var(--ice);display:flex;align-items:center;justify-content:center;font-size:1.4rem;margin-bottom:14px}
+        .wcard-body h3{font-size:1.05rem;font-weight:800;color:var(--navy-deep);margin-bottom:8px}
+        .wcard-body p{font-size:.85rem;color:var(--gray);font-weight:300;line-height:1.8}
+
+        /* ===== FRANCHISE ===== */
+        .franchise{padding:130px 0;background:linear-gradient(180deg,var(--navy-deep),var(--dark));color:#fff}
+        .fran-header{text-align:center;margin-bottom:64px}
+        .fran-header .label{color:var(--aqua)}
+        .fran-header .stitle{color:#fff}
+        .fran-header .sdesc{color:rgba(255,255,255,.55);margin:0 auto}
+        .fran-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+        .fcard{padding:40px 28px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);text-align:center;backdrop-filter:blur(8px);transition:all .35s}
+        .fcard:hover{background:rgba(255,255,255,.08);border-color:rgba(0,180,216,.25);transform:translateY(-6px)}
+        .fcard-icon{font-size:2.8rem;margin-bottom:16px}
+        .fcard h3{font-size:1.05rem;font-weight:700;margin-bottom:10px}
+        .fcard p{font-size:.85rem;color:rgba(255,255,255,.55);font-weight:300;line-height:1.7}
+        .fcard .val{display:block;margin-top:16px;font-family:'Outfit',sans-serif;font-size:1.8rem;font-weight:900;background:linear-gradient(135deg,var(--sky),var(--aqua));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+        /* ===== STATS ===== */
+        .stats{padding:64px 0;background:linear-gradient(135deg,var(--sky),var(--ocean))}
+        .stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;text-align:center;color:#fff}
+        .stats-row b{display:block;font-family:'Outfit',sans-serif;font-size:2.6rem;font-weight:900;margin-bottom:4px}
+        .stats-row span{font-size:.82rem;font-weight:300;opacity:.85}
+
+        /* ===== STORES ===== */
+        .stores{padding:130px 0;background:var(--sand-light)}
+        .stores-header{text-align:center;margin-bottom:56px}
+        .stores-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+        .scard{background:var(--white);border-radius:var(--radius);overflow:hidden;box-shadow:0 6px 24px rgba(0,0,0,.04);transition:transform .35s}
+        .scard:hover{transform:translateY(-6px)}
+        .scard-img{height:220px;overflow:hidden}
+        .scard-img img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+        .scard:hover .scard-img img{transform:scale(1.04)}
+        .scard-body{padding:22px}
+        .scard-tag{display:inline-block;background:var(--ice);color:var(--ocean);padding:4px 12px;border-radius:20px;font-size:.7rem;font-weight:700;margin-bottom:10px;letter-spacing:1px}
+        .scard-body h3{font-size:1rem;font-weight:800;color:var(--navy-deep);margin-bottom:6px}
+        .scard-body p{font-size:.82rem;color:var(--gray);line-height:1.6}
+        .scard-specs{list-style:none;margin-top:14px}
+        .scard-specs li{padding:8px 0;border-bottom:1px solid var(--gray-light);font-size:.84rem;color:var(--gray);display:flex;justify-content:space-between}
+        .scard-specs li:last-child{border-bottom:none}
+        .scard-specs li b{color:var(--navy-deep)}
+
+        /* ===== CTA ===== */
+        .cta{padding:130px 0;background:var(--white)}
+        .cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+        .cta-promo{background:linear-gradient(135deg,rgba(0,180,216,.06),rgba(212,168,67,.06));border:2px solid rgba(0,180,216,.12);border-radius:var(--radius);padding:28px;margin-bottom:28px}
+        .cta-promo h3{font-size:1.15rem;font-weight:900;color:var(--navy-deep);margin-bottom:6px}
+        .cta-promo p{font-size:.88rem;color:var(--gray)}
+        .cta-promo b{color:var(--sky)}
+        .cta-ci{display:flex;align-items:center;gap:14px;padding:16px;background:var(--off-white);border-radius:14px;margin-bottom:12px}
+        .cta-ci i{font-style:normal;font-size:1.4rem}
+        .cta-ci small{display:block;font-size:.72rem;color:var(--gray)}
+        .cta-ci strong{font-size:1.02rem;color:var(--navy-deep)}
+        .cta-form{background:var(--navy-deep);border-radius:24px;padding:42px;color:#fff}
+        .cta-form h3{font-size:1.2rem;font-weight:800;margin-bottom:26px}
+        .fg{margin-bottom:14px}
+        .fg label{display:block;font-size:.8rem;margin-bottom:5px;opacity:.6}
+        .fg input,.fg select,.fg textarea{width:100%;padding:13px 16px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.09);border-radius:12px;color:#fff;font-size:.9rem;font-family:'Noto Sans KR',sans-serif;transition:border-color .3s}
+        .fg input::placeholder,.fg textarea::placeholder{color:rgba(255,255,255,.28)}
+        .fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--sky)}
+        .fg select option{color:#333;background:#fff}
+        .fg-row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+        .cta-submit{width:100%;padding:15px;background:linear-gradient(135deg,var(--sky),var(--ocean));border:none;border-radius:14px;color:#fff;font-size:.98rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:'Noto Sans KR',sans-serif;margin-top:6px;box-shadow:0 6px 24px rgba(0,180,216,.3)}
+        .cta-submit:hover{transform:translateY(-2px);box-shadow:0 10px 36px rgba(0,180,216,.45)}
+
+        /* ===== FOOTER ===== */
+        footer{padding:48px 32px 28px;background:var(--dark);color:rgba(255,255,255,.35);text-align:center}
+        .ft-logo{display:flex;align-items:center;gap:8px;justify-content:center;margin-bottom:16px}
+        .ft-logo img{width:32px;border-radius:8px;opacity:.5}
+        .ft-logo span{font-family:'Outfit',sans-serif;font-size:.9rem;font-weight:700;letter-spacing:3px;color:rgba(255,255,255,.25)}
+        .ft-info{font-size:.78rem;line-height:1.8;margin-bottom:16px}
+        .ft-social{display:flex;gap:20px;justify-content:center;margin-bottom:16px}
+        .ft-social a{color:rgba(255,255,255,.25);text-decoration:none;font-family:'Outfit',sans-serif;font-size:.7rem;letter-spacing:2px;transition:color .3s}
+        .ft-social a:hover{color:var(--sky)}
+        .ft-copy{font-size:.68rem;opacity:.4}
+
+        /* ===== FLOATING ===== */
+        .float-cta{position:fixed;bottom:28px;right:28px;z-index:99;background:linear-gradient(135deg,var(--sky),var(--ocean));color:#fff;padding:15px 26px;border-radius:50px;text-decoration:none;font-weight:700;font-size:.88rem;box-shadow:0 8px 32px rgba(0,180,216,.4);transition:all .3s;display:flex;align-items:center;gap:8px}
+        .float-cta:hover{transform:translateY(-3px);box-shadow:0 12px 44px rgba(0,180,216,.55)}
+
+        /* ===== RESPONSIVE ===== */
+        @media(max-width:768px){
+            header{padding:14px 16px}
+            .h-links{display:none}
+            .hero h1{font-size:2.2rem}
+            .hero-sub{font-size:1rem}
+            .container{padding:0 18px}
+            .brand{padding:80px 0}
+            .brand-grid{grid-template-columns:1fr;gap:36px}
+            .brand-imgs{height:320px}
+            .brand-img1{width:100%;height:320px;position:relative;border-radius:16px}
+            .brand-img2,.brand-badge{display:none}
+            .why,.franchise,.stores,.cta{padding:80px 0}
+            .why-grid,.fran-grid,.stores-grid{grid-template-columns:1fr}
+            .stats-row{grid-template-columns:repeat(2,1fr)}
+            .cta-grid{grid-template-columns:1fr}
+            .cta-form{padding:28px}
+            .fg-row{grid-template-columns:1fr}
+            .vband{height:320px}
+            .vband-inner h2{font-size:1.7rem}
+            .gtrack img,.gtrack2 img{width:250px;height:170px}
+            .stitle{font-size:1.9rem}
+            .float-cta{bottom:18px;right:18px;padding:12px 20px;font-size:.82rem}
+        }
+    </style>
+</head>
+<body>
+
+<!-- Loader -->
+<div id="loader">
+    <img src="bw-assets/logo.jpeg" alt="BLUEWAVE">
+    <div class="bar"><i></i></div>
+</div>
+
+<!-- Header -->
+<header id="hdr">
+    <a href="#" class="h-logo">
+        <img src="bw-assets/logo.jpeg" alt="logo">
+        <span class="h-logo-text">BLUE<span>WAVE</span></span>
+    </a>
+    <div class="h-right">
+        <div class="h-links">
+            <a href="#brand">BRAND</a>
+            <a href="#why">WHY US</a>
+            <a href="#franchise">FRANCHISE</a>
+            <a href="#stores">STORE</a>
+        </div>
+        <a href="#cta" class="h-cta">창업 상담</a>
+    </div>
+</header>
+
+<!-- Hero -->
+<section class="hero">
+    <div class="hero-fallback"></div>
+    <video autoplay muted loop playsinline class="hero-vid">
+        <source src="bw-assets/hero-video.mp4" type="video/mp4">
+    </video>
+    <div class="hero-dim"></div>
+    <div class="hero-inner">
+        <img src="bw-assets/logo.jpeg" class="hero-logo" alt="logo">
+        <div class="hero-tag eng">RESORT-STYLE CAFE FRANCHISE</div>
+        <h1>도심 속<br><em>휴양지</em> 카페</h1>
+        <p class="hero-sub">Where Every Sip Feels Like a Vacation</p>
+        <p class="hero-desc">
+            리조트 감성 프리미엄 인테리어 · 60가지+ 시그니처 메뉴<br>
+            가맹비 · 교육비 · 보증금 <strong style="color:var(--aqua)">전액 면제</strong>, 로열티 <strong style="color:var(--aqua)">평생 0원</strong>
+        </p>
+        <div class="hero-btns">
+            <a href="#cta" class="btn-glow">무료 창업 상담</a>
+            <a href="#brand" class="btn-glass">브랜드 소개 →</a>
+        </div>
+    </div>
+    <div class="hero-wave">
+        <svg viewBox="0 0 1440 90" preserveAspectRatio="none"><path d="M0,32 C360,90 720,0 1080,48 C1260,72 1380,36 1440,32 L1440,90 L0,90Z" fill="#ffffff"/></svg>
+    </div>
+</section>
+
+<!-- Brand -->
+<section class="brand" id="brand">
+    <div class="container">
+        <div class="brand-grid">
+            <div class="brand-imgs sr">
+                <img class="brand-img1" src="bw-assets/store-siheung.jpeg" alt="매장">
+                <img class="brand-img2" src="bw-assets/store-yangsan.jpeg" alt="매장 내부">
+                <div class="brand-badge">
+                    <b>0원</b>
+                    <span>로열티</span>
+                </div>
+            </div>
+            <div>
+                <p class="label sr eng">BRAND STORY</p>
+                <h2 class="stitle sr d1">해변의 여유를<br>도심에 <em>그대로</em></h2>
+                <p class="sdesc sr d2">
+                    블루웨이브 커피는 '도심 속 휴양지'를 컨셉으로 한 리조트 감성 카페입니다.
+                    해변 리조트를 연상시키는 프리미엄 인테리어와 60가지 이상의 시그니처 메뉴로
+                    고객에게 일상 속 특별한 힐링 경험을 제공합니다.
+                </p>
+                <div class="brand-features sr d3">
+                    <div class="brand-feat"><i>🏝️</i> 리조트 감성 인테리어</div>
+                    <div class="brand-feat"><i>☕</i> 60+ 시그니처 메뉴</div>
+                    <div class="brand-feat"><i>📸</i> SNS 바이럴 공간</div>
+                    <div class="brand-feat"><i>💰</i> 합리적 창업비용</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Visual Band -->
+<section class="vband">
+    <video autoplay muted loop playsinline>
+        <source src="bw-assets/hawaii.mp4" type="video/mp4">
+    </video>
+    <div class="vband-img" style="background-image:url('bw-assets/ocean2.jpeg')"></div>
+    <div class="vband-dim"></div>
+    <div class="vband-inner">
+        <h2 class="sr eng">A Vacation in Every Cup</h2>
+        <p class="sr d1">매 한 잔에 담긴 휴양지의 여유, 블루웨이브만의 경험</p>
+    </div>
+</section>
+
+<!-- Gallery -->
+<section class="gallery">
+    <div class="container">
+        <div class="gallery-header">
+            <p class="label sr eng">STORE GALLERY</p>
+            <h2 class="stitle sr d1">전국 블루웨이브 <em>매장</em></h2>
+        </div>
+    </div>
+    <div class="gtrack">
+        <img src="bw-assets/store-siheung.jpeg" alt="시흥">
+        <img src="bw-assets/store-incheon.jpeg" alt="인천">
+        <img src="bw-assets/store-yangsan.jpeg" alt="양산">
+        <img src="bw-assets/store-pyeongtaek.jpeg" alt="평택">
+        <img src="bw-assets/store-songpa.jpeg" alt="송파">
+        <img src="bw-assets/store-siheung2.jpeg" alt="시흥2">
+        <img src="bw-assets/store-incheon2.jpeg" alt="인천2">
+        <img src="bw-assets/store-yangsan2.jpeg" alt="양산2">
+        <img src="bw-assets/store-pyeongtaek2.jpeg" alt="평택2">
+        <img src="bw-assets/store-siheung3.jpeg" alt="시흥3">
+        <img src="bw-assets/store-siheung.jpeg" alt="시흥">
+        <img src="bw-assets/store-incheon.jpeg" alt="인천">
+        <img src="bw-assets/store-yangsan.jpeg" alt="양산">
+        <img src="bw-assets/store-pyeongtaek.jpeg" alt="평택">
+        <img src="bw-assets/store-songpa.jpeg" alt="송파">
+        <img src="bw-assets/store-siheung2.jpeg" alt="시흥2">
+    </div>
+    <div class="gtrack2">
+        <img src="bw-assets/menu1.jpeg" alt="메뉴1">
+        <img src="bw-assets/design1.jpeg" alt="디자인1">
+        <img src="bw-assets/menu2.jpeg" alt="메뉴2">
+        <img src="bw-assets/design2.jpeg" alt="디자인2">
+        <img src="bw-assets/menu3.jpeg" alt="메뉴3">
+        <img src="bw-assets/mockup1.jpeg" alt="목업1">
+        <img src="bw-assets/menu4.jpeg" alt="메뉴4">
+        <img src="bw-assets/standard1.jpeg" alt="일반형">
+        <img src="bw-assets/menu1.jpeg" alt="메뉴1b">
+        <img src="bw-assets/design1.jpeg" alt="디자인1b">
+        <img src="bw-assets/menu2.jpeg" alt="메뉴2b">
+        <img src="bw-assets/design2.jpeg" alt="디자인2b">
+        <img src="bw-assets/menu3.jpeg" alt="메뉴3b">
+        <img src="bw-assets/mockup1.jpeg" alt="목업1b">
+    </div>
+</section>
+
+<!-- Why -->
+<section class="why" id="why">
+    <div class="container">
+        <div class="why-header">
+            <p class="label sr eng">WHY BLUEWAVE</p>
+            <h2 class="stitle sr d1">블루웨이브를 선택하는 <em>이유</em></h2>
+            <p class="sdesc sr d2">차별화된 브랜드 파워와 압도적 창업 지원</p>
+        </div>
+        <div class="why-grid">
+            <div class="wcard sr">
+                <div class="wcard-img"><img src="bw-assets/store-pyeongtaek.jpeg" alt="인테리어"></div>
+                <div class="wcard-body">
+                    <div class="wcard-icon">🎨</div>
+                    <h3>독보적 인테리어</h3>
+                    <p>해변 리조트 감성의 프리미엄 인테리어로 오픈 첫날부터 SNS 입소문 효과를 체감합니다</p>
+                </div>
+            </div>
+            <div class="wcard sr d1">
+                <div class="wcard-img"><img src="bw-assets/design1.jpeg" alt="메뉴"></div>
+                <div class="wcard-body">
+                    <div class="wcard-icon">🥤</div>
+                    <h3>60+ 시그니처 메뉴</h3>
+                    <p>커피, 논커피, 스무디, 에이드, 디저트까지 폭넓은 메뉴로 다양한 고객층을 확보합니다</p>
+                </div>
+            </div>
+            <div class="wcard sr d2">
+                <div class="wcard-img"><img src="bw-assets/store-siheung3.jpeg" alt="지원"></div>
+                <div class="wcard-body">
+                    <div class="wcard-icon">🤝</div>
+                    <h3>본사 풀 서포트</h3>
+                    <p>상권 분석부터 오픈 후 마케팅까지, 본사의 체계적 지원으로 안정적 운영을 보장합니다</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Franchise -->
+<section class="franchise" id="franchise">
+    <div class="container">
+        <div class="fran-header">
+            <p class="label sr eng">FRANCHISE BENEFITS</p>
+            <h2 class="stitle sr d1" style="color:#fff">파격적인 창업 <em>혜택</em></h2>
+            <p class="sdesc sr d2" style="color:rgba(255,255,255,.5)">선착순 10호점 대상, 역대급 창업 지원 프로그램</p>
+        </div>
+        <div class="fran-grid">
+            <div class="fcard sr">
+                <div class="fcard-icon">🎁</div>
+                <h3>가맹비 전액 면제</h3>
+                <p>가맹비 · 교육비 · 보증금<br>3가지 비용 모두 전액 면제</p>
+                <span class="val eng">₩0</span>
+            </div>
+            <div class="fcard sr d1">
+                <div class="fcard-icon">♾️</div>
+                <h3>로열티 평생 0원</h3>
+                <p>월 고정비용 부담 없이<br>매출 순수익 극대화</p>
+                <span class="val eng">FOREVER</span>
+            </div>
+            <div class="fcard sr d2">
+                <div class="fcard-icon">💎</div>
+                <h3>합리적 창업비용</h3>
+                <p>10평 기준 프리미엄 카페를<br>합리적 비용으로 오픈</p>
+                <span class="val eng">4,200만~</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Stats -->
+<section class="stats">
+    <div class="container">
+        <div class="stats-row">
+            <div class="sr"><b class="eng">60+</b><span>메뉴 라인업</span></div>
+            <div class="sr d1"><b class="eng">0원</b><span>월 로열티</span></div>
+            <div class="sr d2"><b class="eng">100%</b><span>본사 지원</span></div>
+            <div class="sr d3"><b class="eng">30+</b><span>전국 매장</span></div>
+        </div>
+    </div>
+</section>
+
+<!-- Stores -->
+<section class="stores" id="stores">
+    <div class="container">
+        <div class="stores-header">
+            <p class="label sr eng">STORE TYPES</p>
+            <h2 class="stitle sr d1">맞춤형 <em>매장 유형</em></h2>
+        </div>
+        <div class="stores-grid">
+            <div class="scard sr">
+                <div class="scard-img"><img src="bw-assets/takeout1.jpeg" alt="테이크아웃"></div>
+                <div class="scard-body">
+                    <div class="scard-tag eng">COMPACT</div>
+                    <h3>테이크아웃 전문점</h3>
+                    <ul class="scard-specs">
+                        <li>매장 크기 <b>10~15평</b></li>
+                        <li>창업비용 <b>4,200만원~</b></li>
+                        <li>인력 <b>1~2명</b></li>
+                        <li>추천 상권 <b>역세권 · 오피스</b></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="scard sr d1">
+                <div class="scard-img"><img src="bw-assets/store-yangsan.jpeg" alt="일반형"></div>
+                <div class="scard-body">
+                    <div class="scard-tag eng">STANDARD</div>
+                    <h3>리조트 감성 카페</h3>
+                    <ul class="scard-specs">
+                        <li>매장 크기 <b>20~30평</b></li>
+                        <li>창업비용 <b>6,500만원~</b></li>
+                        <li>인력 <b>2~3명</b></li>
+                        <li>추천 상권 <b>주거 · 상업지</b></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="scard sr d2">
+                <div class="scard-img"><img src="bw-assets/store-siheung.jpeg" alt="프리미엄"></div>
+                <div class="scard-body">
+                    <div class="scard-tag eng">PREMIUM</div>
+                    <h3>프리미엄 플래그십</h3>
+                    <ul class="scard-specs">
+                        <li>매장 크기 <b>40평 이상</b></li>
+                        <li>창업비용 <b>1억원~</b></li>
+                        <li>인력 <b>3~5명</b></li>
+                        <li>추천 상권 <b>핫플 · 대로변</b></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta" id="cta">
+    <div class="container">
+        <div class="cta-grid">
+            <div>
+                <p class="label sr eng">FRANCHISE INQUIRY</p>
+                <h2 class="stitle sr d1">지금 바로<br><em>무료 상담</em> 신청</h2>
+                <div class="cta-promo sr d2">
+                    <h3>🎉 선착순 10호점 특별 혜택</h3>
+                    <p>가맹비 · 교육비 · 보증금 <b>전액 면제</b> + 로열티 <b>평생 0원</b></p>
+                </div>
+                <div class="cta-ci sr d2">
+                    <i>📞</i>
+                    <div><small>전화 상담</small><strong>1566-2303</strong></div>
+                </div>
+                <div class="cta-ci sr d3">
+                    <i>💬</i>
+                    <div><small>카카오톡</small><strong>@블루웨이브커피</strong></div>
+                </div>
+                <div class="cta-ci sr d4">
+                    <i>📍</i>
+                    <div><small>본사 위치</small><strong>블루웨이브 커피 본사</strong></div>
+                </div>
+            </div>
+            <div class="cta-form sr d1">
+                <h3>✉️ 무료 창업 상담 신청</h3>
+                <div class="fg-row">
+                    <div class="fg"><label>이름</label><input placeholder="홍길동"></div>
+                    <div class="fg"><label>연락처</label><input placeholder="010-0000-0000"></div>
+                </div>
+                <div class="fg"><label>희망 지역</label><input placeholder="서울 강남, 경기 수원 등"></div>
+                <div class="fg-row">
+                    <div class="fg"><label>창업 유형</label><select><option>신규 창업</option><option>업종 변경</option><option>간판 변경</option></select></div>
+                    <div class="fg"><label>예상 평수</label><select><option>10평 이하</option><option>10~20평</option><option>20~30평</option><option>30평 이상</option></select></div>
+                </div>
+                <div class="fg"><label>문의 내용</label><textarea rows="3" placeholder="궁금하신 점을 자유롭게 작성해주세요"></textarea></div>
+                <button class="cta-submit">무료 상담 신청하기 →</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="ft-logo"><img src="bw-assets/logo.jpeg" alt=""><span>BLUEWAVE COFFEE</span></div>
+    <div class="ft-info">대표전화 1566-2303</div>
+    <div class="ft-social">
+        <a href="#" class="eng">INSTAGRAM</a>
+        <a href="#" class="eng">YOUTUBE</a>
+        <a href="#" class="eng">BLOG</a>
+    </div>
+    <p class="ft-copy eng">© 2024 BLUEWAVE COFFEE. ALL RIGHTS RESERVED.</p>
+</footer>
+
+<!-- Float CTA -->
+<a href="#cta" class="float-cta">📞 창업 상담</a>
+
+<script>
+window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('loader').classList.add('out'),2200)});
+window.addEventListener('scroll',()=>{document.getElementById('hdr').classList.toggle('solid',scrollY>60)});
+const srs=document.querySelectorAll('.sr');
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')})},{threshold:.1});
+srs.forEach(s=>obs.observe(s));
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'})})});
+</script>
+</body>
+</html>

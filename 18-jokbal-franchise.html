@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>불야성 족발 | BULYASEONG - 프랜차이즈 창업</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#111;--bg2:#1a1a1a;--gold:#D4A843;--gold-light:#E8C86A;--red:#C62828;--red-light:#E53935;--cream:#F5E6D3;--white:#F5F5F5;--glass:rgba(17,17,17,.85)}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR','Outfit',sans-serif;background:var(--bg);color:var(--white);overflow-x:hidden}
+/* Preloader */
+#preloader{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--bg);z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .6s}
+#preloader.hide{opacity:0;pointer-events:none}
+.pre-hanja{font-size:clamp(48px,8vw,80px);color:var(--gold);text-shadow:0 0 30px rgba(212,168,67,.5);margin-bottom:12px;animation:goldPulse 2s ease-in-out infinite}
+.pre-name{font-family:'Outfit';font-size:18px;letter-spacing:6px;color:var(--gold);opacity:.7}
+.pre-bar{width:180px;height:2px;background:rgba(255,255,255,.08);border-radius:4px;overflow:hidden;margin-top:24px}
+.pre-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold));animation:loadBar 2s ease forwards}
+@keyframes loadBar{to{width:100%}}
+@keyframes goldPulse{0%,100%{text-shadow:0 0 30px rgba(212,168,67,.5)}50%{text-shadow:0 0 60px rgba(212,168,67,.8),0 0 100px rgba(212,168,67,.3)}}
+/* Steam & Glitter Canvas */
+#effectCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998}
+/* Traditional pattern overlay */
+body::before{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;opacity:.03;background-image:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23D4A843' fill-opacity='1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")}
+/* Nav */
+nav{position:fixed;top:0;width:100%;padding:18px 40px;display:flex;justify-content:space-between;align-items:center;z-index:1000;transition:all .4s}
+nav.scrolled{background:rgba(17,17,17,.95);backdrop-filter:blur(12px);padding:12px 40px;box-shadow:0 2px 30px rgba(212,168,67,.08)}
+.nav-logo{font-weight:900;font-size:22px;color:var(--gold);text-decoration:none;display:flex;align-items:center;gap:8px}
+.nav-logo .hanja{font-size:28px}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:var(--white);text-decoration:none;font-size:14px;font-weight:400;transition:color .3s}
+.nav-links a:hover{color:var(--gold)}
+.nav-cta{background:var(--gold);border:none;color:var(--bg);padding:10px 24px;border-radius:4px;cursor:pointer;font-size:14px;font-family:'Noto Sans KR';font-weight:700;transition:all .3s}
+.nav-cta:hover{background:var(--gold-light);box-shadow:0 4px 20px rgba(212,168,67,.3)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:1001}
+.hamburger span{width:24px;height:2px;background:var(--gold);transition:.3s}
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1544025162-d76694265947?w=1920&q=80') center/cover;filter:brightness(.25) saturate(1.3)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(17,17,17,.5) 0%,rgba(17,17,17,.85) 100%)}
+.hero-content{position:relative;z-index:2;text-align:center;padding:0 20px}
+.hero-hanja{font-size:clamp(60px,12vw,140px);color:var(--gold);text-shadow:0 0 40px rgba(212,168,67,.4);line-height:1;margin-bottom:8px;opacity:0;transform:translateY(30px);animation:fadeUp .8s .3s forwards}
+.hero-brand{font-family:'Outfit';font-size:clamp(16px,2vw,22px);color:var(--gold);letter-spacing:12px;text-transform:uppercase;margin-bottom:8px;opacity:0;transform:translateY(20px);animation:fadeUp .8s .5s forwards}
+.hero-title-kr{font-size:clamp(24px,4vw,44px);font-weight:900;margin-bottom:24px;opacity:0;transform:translateY(20px);animation:fadeUp .8s .7s forwards}
+.hero-title-kr .red{color:var(--red-light)}
+.hero-desc{font-size:clamp(14px,1.5vw,17px);color:rgba(245,245,245,.6);max-width:520px;margin:0 auto 36px;line-height:1.8;opacity:0;transform:translateY(20px);animation:fadeUp .8s .9s forwards}
+.hero-btns{display:flex;gap:16px;justify-content:center;opacity:0;transform:translateY(20px);animation:fadeUp .8s 1.1s forwards}
+.btn-gold{padding:14px 36px;background:var(--gold);color:var(--bg);border:none;font-size:16px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR';transition:all .3s;text-decoration:none;border-radius:4px}
+.btn-gold:hover{background:var(--gold-light);box-shadow:0 8px 30px rgba(212,168,67,.3);transform:translateY(-2px)}
+.btn-red{padding:14px 36px;border:2px solid var(--red);color:var(--red-light);background:transparent;font-size:16px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR';transition:all .3s;text-decoration:none;border-radius:4px}
+.btn-red:hover{background:var(--red);color:#fff;box-shadow:0 8px 30px rgba(198,40,40,.3)}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+/* Decorative border */
+.gold-divider{width:60px;height:2px;background:var(--gold);margin:0 auto 20px}
+/* Marquee */
+.marquee-band{overflow:hidden;background:var(--red);padding:14px 0}
+.marquee-band.gold{background:var(--gold)}
+.marquee-band.gold .marquee-track span{color:var(--bg)}
+.marquee-track{display:flex;animation:marqueeScroll 22s linear infinite;width:max-content}
+.marquee-track span{font-family:'Outfit';font-size:17px;font-weight:700;color:#fff;white-space:nowrap;padding:0 40px;letter-spacing:2px}
+@keyframes marqueeScroll{to{transform:translateX(-50%)}}
+/* Section */
+.section{padding:100px 20px;position:relative;z-index:1}
+.section-label{font-family:'Outfit';font-size:13px;color:var(--gold);letter-spacing:6px;text-transform:uppercase;text-align:center;margin-bottom:10px}
+.section-title{font-size:clamp(28px,4vw,48px);font-weight:900;text-align:center;margin-bottom:16px}
+.section-title .gold{color:var(--gold)}
+.section-title .red{color:var(--red-light)}
+.section-desc{text-align:center;color:rgba(245,245,245,.5);max-width:580px;margin:0 auto 60px;line-height:1.8;font-size:15px}
+.reveal{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.4,0,.2,1)}
+.reveal.active{opacity:1;transform:translateY(0)}
+/* Brand */
+.brand-cols{display:grid;grid-template-columns:repeat(3,1fr);gap:30px;max-width:1100px;margin:0 auto}
+.brand-card{background:var(--glass);border:1px solid rgba(212,168,67,.12);border-radius:8px;padding:40px 28px;text-align:center;transition:all .4s;position:relative;overflow:hidden}
+.brand-card::after{content:'';position:absolute;bottom:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--red),var(--gold));transform:scaleX(0);transition:transform .4s}
+.brand-card:hover::after{transform:scaleX(1)}
+.brand-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+.brand-icon{font-size:44px;margin-bottom:18px}
+.brand-card h3{font-size:20px;font-weight:700;margin-bottom:12px;color:var(--gold)}
+.brand-card p{font-size:14px;color:rgba(245,245,245,.6);line-height:1.8}
+/* Menu */
+.menu-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1100px;margin:0 auto}
+.menu-card{background:var(--bg2);border:1px solid rgba(212,168,67,.08);border-radius:8px;overflow:hidden;transition:all .4s}
+.menu-card:hover{border-color:var(--gold);box-shadow:0 8px 30px rgba(212,168,67,.1);transform:translateY(-6px)}
+.menu-img{width:100%;height:240px;object-fit:cover;filter:brightness(.85);transition:all .5s}
+.menu-card:hover .menu-img{filter:brightness(1);transform:scale(1.05)}
+.menu-body{padding:24px}
+.menu-badge{display:inline-block;background:var(--red);color:#fff;padding:3px 10px;border-radius:3px;font-size:11px;font-weight:700;margin-bottom:10px}
+.menu-body h4{font-size:19px;font-weight:800;margin-bottom:6px;color:var(--cream)}
+.menu-body p{font-size:13px;color:rgba(245,245,245,.5);margin-bottom:10px}
+.menu-body .price{font-size:18px;font-weight:800;color:var(--gold)}
+/* Visual band */
+.visual-band{height:300px;position:relative;overflow:hidden}
+.visual-band-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=1920&q=80') center/cover;filter:brightness(.3)}
+.visual-band-content{position:relative;z-index:1;height:100%;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.visual-band-content h2{font-size:clamp(28px,5vw,56px);font-weight:900;color:var(--gold);text-shadow:0 0 30px rgba(212,168,67,.3);margin-bottom:8px}
+.visual-band-content p{font-size:18px;color:rgba(245,245,245,.6)}
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1000px;margin:0 auto 60px;text-align:center}
+.stat-num{font-family:'Outfit';font-size:clamp(36px,5vw,56px);font-weight:900;color:var(--gold)}
+.stat-label{font-size:14px;color:rgba(245,245,245,.5);margin-top:6px}
+/* Steps */
+.steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:1100px;margin:0 auto}
+.step-card{background:var(--glass);border:1px solid rgba(212,168,67,.1);border-radius:8px;padding:36px 24px;text-align:center;transition:all .4s}
+.step-card:hover{border-color:var(--gold);transform:translateY(-4px)}
+.step-num{font-family:'Outfit';font-size:44px;font-weight:900;color:var(--red-light);margin-bottom:14px}
+.step-card h4{font-size:18px;font-weight:700;margin-bottom:10px;color:var(--gold)}
+.step-card p{font-size:14px;color:rgba(245,245,245,.6);line-height:1.7}
+/* Form */
+.form-wrap{max-width:600px;margin:0 auto;background:var(--glass);border:1px solid rgba(212,168,67,.12);border-radius:12px;padding:48px;backdrop-filter:blur(8px)}
+.form-wrap input,.form-wrap select,.form-wrap textarea{width:100%;padding:14px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:6px;color:var(--white);font-size:15px;font-family:'Noto Sans KR';margin-bottom:14px;transition:border-color .3s;outline:none}
+.form-wrap input:focus,.form-wrap select:focus,.form-wrap textarea:focus{border-color:var(--gold);box-shadow:0 0 10px rgba(212,168,67,.15)}
+.form-wrap input::placeholder,.form-wrap textarea::placeholder{color:rgba(245,245,245,.3)}
+.form-wrap select{appearance:none}
+.form-wrap select option{background:var(--bg);color:var(--white)}
+.form-wrap textarea{height:100px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.btn-submit{width:100%;padding:16px;background:var(--gold);color:var(--bg);border:none;border-radius:6px;font-size:17px;font-weight:800;cursor:pointer;font-family:'Noto Sans KR';transition:all .3s}
+.btn-submit:hover{background:var(--gold-light);box-shadow:0 8px 30px rgba(212,168,67,.3);transform:translateY(-2px)}
+/* Footer */
+footer{background:rgba(0,0,0,.5);padding:60px 20px 30px;text-align:center;border-top:1px solid rgba(212,168,67,.08);position:relative;z-index:1}
+.footer-logo{font-size:28px;font-weight:900;color:var(--gold);margin-bottom:6px}
+.footer-eng{font-family:'Outfit';font-size:14px;color:rgba(212,168,67,.5);letter-spacing:4px;margin-bottom:16px}
+.footer-links{display:flex;justify-content:center;gap:24px;margin-bottom:18px;flex-wrap:wrap}
+.footer-links a{color:rgba(245,245,245,.4);text-decoration:none;font-size:13px;transition:color .3s}
+.footer-links a:hover{color:var(--gold)}
+footer p{color:rgba(245,245,245,.25);font-size:12px}
+/* Floating CTA */
+.floating-cta{position:fixed;bottom:30px;right:30px;z-index:999;background:var(--gold);color:var(--bg);padding:14px 28px;border-radius:50px;display:flex;align-items:center;gap:8px;font-size:15px;font-weight:700;cursor:pointer;border:none;transition:all .3s;box-shadow:0 4px 20px rgba(212,168,67,.3);font-family:'Noto Sans KR'}
+.floating-cta:hover{transform:translateY(-3px);box-shadow:0 8px 30px rgba(212,168,67,.4)}
+/* Mobile */
+@media(max-width:768px){
+.nav-links{display:none;position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(17,17,17,.98);flex-direction:column;align-items:center;justify-content:center;gap:32px}
+.nav-links.open{display:flex}
+.hamburger{display:flex}
+.brand-cols,.menu-grid,.steps-grid{grid-template-columns:1fr}
+.menu-grid{grid-template-columns:repeat(2,1fr)}
+.stats-row{grid-template-columns:repeat(2,1fr);gap:30px}
+.form-row{grid-template-columns:1fr}
+.hero-btns{flex-direction:column;align-items:center}
+nav{padding:14px 20px}
+.floating-cta{bottom:20px;right:20px;padding:12px 20px;font-size:13px}
+}
+@media(max-width:480px){.menu-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<!-- Preloader -->
+<div id="preloader">
+<div class="pre-hanja">&#19981;&#22812;&#22478;</div>
+<div class="pre-name">BULYASEONG JOKBAL</div>
+<div class="pre-bar"><span></span></div>
+</div>
+
+<!-- Effect Canvas -->
+<canvas id="effectCanvas"></canvas>
+
+<!-- Nav -->
+<nav id="nav">
+<a href="#" class="nav-logo"><span class="hanja">&#19981;&#22812;&#22478;</span> 불야성</a>
+<ul class="nav-links" id="navLinks">
+<li><a href="#brand">브랜드</a></li>
+<li><a href="#menu">메뉴</a></li>
+<li><a href="#startup">창업안내</a></li>
+<li><a href="#contact">상담신청</a></li>
+</ul>
+<button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">창업상담</button>
+<div class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+<span></span><span></span><span></span>
+</div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+<div class="hero-bg"></div>
+<div class="hero-overlay"></div>
+<div class="hero-content">
+<div class="hero-hanja">&#19981;&#22812;&#22478;</div>
+<p class="hero-brand">BULYASEONG JOKBAL</p>
+<h1 class="hero-title-kr">밤을 밝히는 <span class="red">족발의 성</span></h1>
+<p class="hero-desc">40년 전통 비법의 특제 양념과 프리미엄 국내산 돼지로 만드는<br>대한민국 대표 족발 프랜차이즈.</p>
+<div class="hero-btns">
+<a href="#contact" class="btn-gold">창업 상담 신청</a>
+<a href="#menu" class="btn-red">메뉴 보기</a>
+</div>
+</div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-band gold">
+<div class="marquee-track">
+<span>&#9733; 불야성 족발 &mdash; BULYASEONG JOKBAL &mdash; 40년 전통 비법 &mdash; 야식의 왕 &mdash; 전국 200호점 &mdash;</span>
+<span>&#9733; 불야성 족발 &mdash; BULYASEONG JOKBAL &mdash; 40년 전통 비법 &mdash; 야식의 왕 &mdash; 전국 200호점 &mdash;</span>
+<span>&#9733; 불야성 족발 &mdash; BULYASEONG JOKBAL &mdash; 40년 전통 비법 &mdash; 야식의 왕 &mdash; 전국 200호점 &mdash;</span>
+</div>
+</div>
+
+<!-- Brand -->
+<section class="section" id="brand">
+<div class="reveal">
+<p class="section-label">About Brand</p>
+<div class="gold-divider"></div>
+<h2 class="section-title">전통을 잇다, <span class="gold">맛을 빛내다</span></h2>
+<p class="section-desc">불야성 족발은 40년 전통의 비법 양념과 최고급 국내산 돼지를 사용하여 대한민국 야식 문화를 선도하는 프리미엄 족발 브랜드입니다.</p>
+</div>
+<div class="brand-cols">
+<div class="brand-card reveal">
+<div class="brand-icon">&#128293;</div>
+<h3>40년 전통 비법</h3>
+<p>3대에 걸쳐 전승된 특제 양념과 12시간 정성 조리 공법으로 완성하는 깊고 진한 맛의 비결입니다.</p>
+</div>
+<div class="brand-card reveal">
+<div class="brand-icon">&#129385;</div>
+<h3>국내산 프리미엄</h3>
+<p>HACCP 인증 시설에서 엄선한 100% 국내산 돼지만을 사용합니다. 매일 당일 도축, 당일 배송합니다.</p>
+</div>
+<div class="brand-card reveal">
+<div class="brand-icon">&#127942;</div>
+<h3>야식 배달 1위</h3>
+<p>배달앱 야식 카테고리 연속 1위. 포장 & 배달에 최적화된 패키징과 오퍼레이션 시스템을 운영합니다.</p>
+</div>
+</div>
+</section>
+
+<!-- Menu -->
+<section class="section" id="menu" style="background:var(--bg2)">
+<div class="reveal">
+<p class="section-label">Signature Menu</p>
+<div class="gold-divider"></div>
+<h2 class="section-title">불야성 <span class="red">시그니처</span></h2>
+<p class="section-desc">전통과 현대의 조화로운 맛, 불야성의 프리미엄 족발 & 보쌈 메뉴입니다.</p>
+</div>
+<div class="menu-grid">
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1544025162-d76694265947?w=600&q=80" alt="오리지널 족발" class="menu-img">
+<div class="menu-body"><span class="menu-badge">SIGNATURE</span><h4>불야성 오리지널 족발</h4><p>40년 전통 비법 양념의 원조 족발</p><div class="price">대 39,000원</div></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1583224964978-2257b960c3d3?w=600&q=80" alt="매운족발" class="menu-img">
+<div class="menu-body"><span class="menu-badge">HOT</span><h4>&#128293; 화염 매운족발</h4><p>불야성 특제 매운양념 족발</p><div class="price">대 42,000원</div></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1580959375944-abd7e991f971?w=600&q=80" alt="냉채족발" class="menu-img">
+<div class="menu-body"><span class="menu-badge">BEST</span><h4>냉채 족발</h4><p>새콤달콤 겨자소스의 시원한 족발</p><div class="price">대 41,000원</div></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=600&q=80" alt="보쌈" class="menu-img">
+<div class="menu-body"><span class="menu-badge">PREMIUM</span><h4>궁중 보쌈</h4><p>부드러운 수육과 모듬 쌈 채소</p><div class="price">대 38,000원</div></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=600&q=80" alt="막국수" class="menu-img">
+<div class="menu-body"><span class="menu-badge">SIDE</span><h4>비빔 막국수</h4><p>족발과 환상의 궁합, 쫄깃한 면발</p><div class="price">8,000원</div></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1553163147-622ab57be1c7?w=600&q=80" alt="쟁반국수" class="menu-img">
+<div class="menu-body"><span class="menu-badge">POPULAR</span><h4>쟁반 국수</h4><p>시원한 육수의 대형 쟁반국수</p><div class="price">10,000원</div></div>
+</div>
+</div>
+</section>
+
+<!-- Visual Band -->
+<div class="visual-band">
+<div class="visual-band-bg"></div>
+<div class="visual-band-content">
+<h2>&#128293; &#50556;&#49885;&#51032; &#50773;, &#48520;&#50556;&#49457;</h2>
+<p>밤을 밝히는 전통의 맛, 당신의 밤을 책임집니다</p>
+</div>
+</div>
+
+<!-- Startup -->
+<section class="section" id="startup">
+<div class="reveal">
+<p class="section-label">Franchise</p>
+<div class="gold-divider"></div>
+<h2 class="section-title">불야성 <span class="gold">창업안내</span></h2>
+<p class="section-desc">검증된 수익모델과 체계적인 지원시스템으로 성공 창업을 약속합니다.</p>
+</div>
+<div class="stats-row reveal">
+<div><div class="stat-num" data-target="200">0</div><div class="stat-label">전국 가맹점수</div></div>
+<div><div class="stat-num" data-target="5200">0</div><div class="stat-label">월 평균 매출(만원)</div></div>
+<div><div class="stat-num" data-target="97">0</div><div class="stat-label">가맹점 생존율(%)</div></div>
+<div><div class="stat-num" data-target="6">0</div><div class="stat-label">평균 회수기간(개월)</div></div>
+</div>
+<div class="steps-grid">
+<div class="step-card reveal"><div class="step-num">01</div><h4>창업 상담</h4><p>전문 컨설턴트와 1:1 맞춤 상담. 예상 수익 시뮬레이션을 제공합니다.</p></div>
+<div class="step-card reveal"><div class="step-num">02</div><h4>입지 선정</h4><p>빅데이터 기반 상권 분석과 최적 입지 선정을 지원합니다.</p></div>
+<div class="step-card reveal"><div class="step-num">03</div><h4>교육 & 시공</h4><p>3주 집중 조리 교육과 전통+모던 콘셉트 인테리어를 시공합니다.</p></div>
+<div class="step-card reveal"><div class="step-num">04</div><h4>Grand Open</h4><p>오픈 프로모션 지원 및 2주 슈퍼바이저 상주 지원을 진행합니다.</p></div>
+</div>
+</section>
+
+<!-- Contact -->
+<section class="section" id="contact">
+<div class="reveal">
+<p class="section-label">Contact Us</p>
+<div class="gold-divider"></div>
+<h2 class="section-title">창업 <span class="gold">상담 신청</span></h2>
+<p class="section-desc">아래 양식을 작성해 주시면 24시간 내 전문 상담사가 연락 드립니다.</p>
+</div>
+<div class="form-wrap reveal">
+<div class="form-row">
+<input type="text" placeholder="이름">
+<input type="tel" placeholder="연락처">
+</div>
+<input type="email" placeholder="이메일">
+<select><option value="">희망 지역 선택</option><option>서울</option><option>경기/인천</option><option>부산/경남</option><option>대구/경북</option><option>대전/충청</option><option>광주/전라</option><option>강원/제주</option></select>
+<select><option value="">예상 투자금액</option><option>5,000만원 이하</option><option>5,000~8,000만원</option><option>8,000만원~1억</option><option>1억 이상</option></select>
+<textarea placeholder="문의 내용을 입력해주세요"></textarea>
+<button class="btn-submit">&#128293; 창업 상담 신청하기</button>
+</div>
+</section>
+
+<!-- Footer -->
+<footer>
+<div class="footer-logo">&#19981;&#22812;&#22478; &#48520;&#50556;&#49457;</div>
+<div class="footer-eng">BULYASEONG JOKBAL</div>
+<div class="footer-links">
+<a href="#">브랜드 소개</a><a href="#">메뉴</a><a href="#">창업안내</a><a href="#">가맹점 현황</a><a href="#">개인정보처리방침</a>
+</div>
+<p>&copy; 2026 불야성 족발 BULYASEONG. All rights reserved. 서울특별시 마포구 홍대입구 78 | 대표전화 1577-5678</p>
+</footer>
+
+<!-- Floating CTA -->
+<button class="floating-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">&#128293; 창업상담</button>
+
+<script>
+// Preloader
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('preloader').classList.add('hide')},2200)});
+// Nav
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60)});
+// Gold glitter + steam particles
+(function(){const c=document.getElementById('effectCanvas'),x=c.getContext('2d');let w,h,particles=[];
+function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
+class Particle{constructor(){this.reset()}
+reset(){this.x=Math.random()*w;this.y=Math.random()*h;this.size=Math.random()*3+1;this.speedY=-(Math.random()*.5+.1);this.speedX=Math.random()*.4-.2;this.opacity=Math.random()*.4+.1;this.color=Math.random()>.5?'212,168,67':'232,201,120';this.life=Math.random()*200+100;this.maxLife=this.life}
+update(){this.y+=this.speedY;this.x+=this.speedX;this.life--;this.opacity=(this.life/this.maxLife)*0.4;if(this.life<=0||this.y<-10)this.reset()}
+draw(){x.beginPath();x.arc(this.x,this.y,this.size,0,Math.PI*2);x.fillStyle=`rgba(${this.color},${this.opacity})`;x.fill()}}
+resize();for(let i=0;i<60;i++)particles.push(new Particle());
+function animate(){x.clearRect(0,0,w,h);particles.forEach(p=>{p.update();p.draw()});requestAnimationFrame(animate)}
+animate();window.addEventListener('resize',resize)})();
+// Reveal
+const obs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('active')})},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+// Counter
+let counted=false;const cObs=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting&&!counted){counted=true;document.querySelectorAll('.stat-num').forEach(n=>{const t=+n.dataset.target;let c=0;const step=t/60;const timer=setInterval(()=>{c+=step;if(c>=t){n.textContent=t.toLocaleString();clearInterval(timer)}else{n.textContent=Math.floor(c).toLocaleString()}},30)})}})},{threshold:.5});
+document.querySelector('.stats-row')&&cObs.observe(document.querySelector('.stats-row'));
+</script>
+</body>
+</html>

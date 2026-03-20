@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>달빛포차 | MOONLIGHT POCHA - 프랜차이즈 창업</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--navy:#0D1B2A;--navy-light:#1B2838;--pink:#FF4081;--cyan:#00E5FF;--yellow:#FFD740;--white:#F5F5F5;--glass:rgba(13,27,42,0.7)}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR','Outfit',sans-serif;background:var(--navy);color:var(--white);overflow-x:hidden}
+/* Preloader */
+#preloader{position:fixed;top:0;left:0;width:100%;height:100%;background:var(--navy);z-index:99999;display:flex;align-items:center;justify-content:center;flex-direction:column;transition:opacity .6s}
+#preloader.hide{opacity:0;pointer-events:none}
+.preloader-neon{font-family:'Outfit';font-size:clamp(28px,5vw,48px);font-weight:800;color:var(--pink);text-shadow:0 0 10px var(--pink),0 0 40px var(--pink),0 0 80px var(--pink);animation:neonPulse 1.5s ease-in-out infinite}
+.preloader-bar{width:200px;height:3px;background:rgba(255,255,255,.1);margin-top:24px;border-radius:4px;overflow:hidden}
+.preloader-bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--cyan));border-radius:4px;animation:loadBar 2s ease forwards}
+@keyframes loadBar{to{width:100%}}
+@keyframes neonPulse{0%,100%{opacity:1}50%{opacity:.4}}
+/* Scanline */
+body::after{content:'';position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:9998;background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,.03) 2px,rgba(0,0,0,.03) 4px)}
+/* Nav */
+nav{position:fixed;top:0;width:100%;padding:18px 40px;display:flex;justify-content:space-between;align-items:center;z-index:1000;transition:all .4s}
+nav.scrolled{background:rgba(13,27,42,.95);backdrop-filter:blur(12px);padding:12px 40px;box-shadow:0 2px 30px rgba(255,64,129,.15)}
+.nav-logo{font-family:'Outfit';font-weight:800;font-size:22px;color:var(--pink);text-shadow:0 0 10px var(--pink);text-decoration:none;letter-spacing:1px}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:var(--white);text-decoration:none;font-size:14px;font-weight:400;transition:color .3s;position:relative}
+.nav-links a:hover{color:var(--pink)}
+.nav-links a::after{content:'';position:absolute;bottom:-4px;left:0;width:0;height:2px;background:var(--pink);box-shadow:0 0 8px var(--pink);transition:width .3s}
+.nav-links a:hover::after{width:100%}
+.nav-cta{background:transparent;border:1px solid var(--pink);color:var(--pink);padding:8px 20px;border-radius:4px;cursor:pointer;font-size:14px;font-family:'Noto Sans KR';transition:all .3s;text-shadow:0 0 8px var(--pink)}
+.nav-cta:hover{background:var(--pink);color:var(--navy);text-shadow:none;box-shadow:0 0 20px var(--pink)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;z-index:1001}
+.hamburger span{width:24px;height:2px;background:var(--pink);transition:.3s}
+/* Hero */
+.hero{min-height:100vh;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+.hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=1920&q=80') center/cover;filter:brightness(.3) saturate(1.2)}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(180deg,rgba(13,27,42,.6) 0%,rgba(13,27,42,.9) 100%)}
+#starCanvas{position:absolute;inset:0;z-index:1}
+.hero-content{position:relative;z-index:2;text-align:center;padding:0 20px}
+.hero-sub{font-family:'Outfit';font-size:clamp(14px,2vw,18px);color:var(--cyan);letter-spacing:8px;text-transform:uppercase;margin-bottom:16px;text-shadow:0 0 10px var(--cyan);opacity:0;transform:translateY(20px);animation:fadeUp .8s .5s forwards}
+.hero-title{font-family:'Outfit';font-size:clamp(48px,10vw,120px);font-weight:900;line-height:1;margin-bottom:12px;opacity:0;transform:translateY(30px);animation:fadeUp .8s .7s forwards}
+.neon-pink{color:var(--pink);text-shadow:0 0 10px var(--pink),0 0 40px var(--pink),0 0 80px var(--pink);animation:neonFlicker 3s infinite}
+.neon-cyan{color:var(--cyan);text-shadow:0 0 10px var(--cyan),0 0 40px var(--cyan),0 0 80px var(--cyan)}
+.hero-title-kr{font-size:clamp(32px,6vw,64px);font-weight:900;margin-bottom:24px;color:var(--yellow);text-shadow:0 0 10px var(--yellow),0 0 30px var(--yellow);opacity:0;transform:translateY(30px);animation:fadeUp .8s .9s forwards}
+.hero-desc{font-size:clamp(14px,1.5vw,18px);color:rgba(245,245,245,.7);max-width:500px;margin:0 auto 36px;line-height:1.7;opacity:0;transform:translateY(20px);animation:fadeUp .8s 1.1s forwards}
+.hero-btns{display:flex;gap:16px;justify-content:center;opacity:0;transform:translateY(20px);animation:fadeUp .8s 1.3s forwards}
+.btn-neon{padding:14px 36px;border:2px solid var(--pink);color:var(--pink);background:transparent;font-size:16px;font-weight:600;cursor:pointer;border-radius:4px;font-family:'Noto Sans KR';transition:all .3s;text-shadow:0 0 8px var(--pink);text-decoration:none}
+.btn-neon:hover{background:var(--pink);color:var(--navy);text-shadow:none;box-shadow:0 0 30px var(--pink)}
+.btn-neon.cyan{border-color:var(--cyan);color:var(--cyan);text-shadow:0 0 8px var(--cyan)}
+.btn-neon.cyan:hover{background:var(--cyan);color:var(--navy);box-shadow:0 0 30px var(--cyan)}
+@keyframes fadeUp{to{opacity:1;transform:translateY(0)}}
+@keyframes neonFlicker{0%,19%,21%,23%,25%,54%,56%,100%{text-shadow:0 0 10px var(--pink),0 0 40px var(--pink),0 0 80px var(--pink)}20%,24%,55%{text-shadow:none}}
+/* Marquee */
+.marquee-band{overflow:hidden;background:var(--pink);padding:14px 0;position:relative}
+.marquee-band.cyan{background:var(--cyan)}
+.marquee-track{display:flex;animation:marqueeScroll 20s linear infinite;width:max-content}
+.marquee-track span{font-family:'Outfit';font-size:18px;font-weight:700;color:var(--navy);white-space:nowrap;padding:0 40px;text-transform:uppercase;letter-spacing:3px}
+@keyframes marqueeScroll{to{transform:translateX(-50%)}}
+/* Sections */
+.section{padding:100px 20px}
+.section-label{font-family:'Outfit';font-size:13px;color:var(--cyan);letter-spacing:6px;text-transform:uppercase;text-align:center;margin-bottom:12px;text-shadow:0 0 8px var(--cyan)}
+.section-title{font-size:clamp(28px,4vw,48px);font-weight:900;text-align:center;margin-bottom:16px}
+.section-title .pink{color:var(--pink);text-shadow:0 0 10px var(--pink)}
+.section-desc{text-align:center;color:rgba(245,245,245,.6);max-width:600px;margin:0 auto 60px;line-height:1.8;font-size:15px}
+.reveal{opacity:0;transform:translateY(40px);transition:all .8s cubic-bezier(.4,0,.2,1)}
+.reveal.active{opacity:1;transform:translateY(0)}
+/* Brand */
+.brand-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:40px;max-width:1100px;margin:0 auto}
+.brand-card{background:var(--glass);border:1px solid rgba(255,64,129,.15);border-radius:12px;padding:48px;backdrop-filter:blur(8px);transition:all .4s}
+.brand-card:hover{border-color:var(--pink);box-shadow:0 0 30px rgba(255,64,129,.1);transform:translateY(-4px)}
+.brand-card h3{font-size:22px;font-weight:700;margin-bottom:16px;color:var(--pink);text-shadow:0 0 8px rgba(255,64,129,.5)}
+.brand-card p{color:rgba(245,245,245,.7);line-height:1.8;font-size:15px}
+.brand-icon{font-size:40px;margin-bottom:20px}
+/* Menu */
+.menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1200px;margin:0 auto}
+.menu-card{background:var(--glass);border:1px solid rgba(0,229,255,.1);border-radius:12px;overflow:hidden;transition:all .4s;cursor:pointer}
+.menu-card:hover{border-color:var(--cyan);box-shadow:0 0 20px rgba(0,229,255,.15);transform:translateY(-6px)}
+.menu-img{width:100%;height:200px;object-fit:cover;filter:brightness(.8) saturate(1.1);transition:all .4s}
+.menu-card:hover .menu-img{filter:brightness(1) saturate(1.2);transform:scale(1.05)}
+.menu-info{padding:20px}
+.menu-info h4{font-size:17px;font-weight:700;margin-bottom:6px;color:var(--yellow)}
+.menu-info p{font-size:13px;color:rgba(245,245,245,.5)}
+.menu-info .price{color:var(--pink);font-weight:700;font-size:16px;margin-top:8px;text-shadow:0 0 6px rgba(255,64,129,.4)}
+/* Stats */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;max-width:1000px;margin:0 auto 60px;text-align:center}
+.stat-num{font-family:'Outfit';font-size:clamp(36px,5vw,56px);font-weight:900;color:var(--pink);text-shadow:0 0 10px var(--pink)}
+.stat-label{font-size:14px;color:rgba(245,245,245,.5);margin-top:6px}
+/* Startup */
+.startup-steps{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;max-width:1100px;margin:0 auto}
+.step-card{background:var(--glass);border:1px solid rgba(255,215,64,.1);border-radius:12px;padding:36px 28px;text-align:center;transition:all .4s;position:relative;overflow:hidden}
+.step-card::before{content:'';position:absolute;top:0;left:0;width:100%;height:3px;background:linear-gradient(90deg,var(--pink),var(--cyan));transform:scaleX(0);transition:transform .4s}
+.step-card:hover::before{transform:scaleX(1)}
+.step-card:hover{border-color:var(--yellow);transform:translateY(-4px)}
+.step-num{font-family:'Outfit';font-size:42px;font-weight:900;color:var(--cyan);text-shadow:0 0 10px var(--cyan);margin-bottom:16px}
+.step-card h4{font-size:18px;font-weight:700;margin-bottom:10px;color:var(--yellow)}
+.step-card p{font-size:14px;color:rgba(245,245,245,.6);line-height:1.7}
+/* Form */
+.form-wrap{max-width:600px;margin:0 auto;background:var(--glass);border:1px solid rgba(255,64,129,.15);border-radius:16px;padding:48px;backdrop-filter:blur(8px)}
+.form-wrap input,.form-wrap select,.form-wrap textarea{width:100%;padding:14px 16px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;color:var(--white);font-size:15px;font-family:'Noto Sans KR';margin-bottom:16px;transition:border-color .3s;outline:none}
+.form-wrap input:focus,.form-wrap select:focus,.form-wrap textarea:focus{border-color:var(--pink);box-shadow:0 0 10px rgba(255,64,129,.2)}
+.form-wrap input::placeholder,.form-wrap textarea::placeholder{color:rgba(245,245,245,.3)}
+.form-wrap select{appearance:none}
+.form-wrap select option{background:var(--navy);color:var(--white)}
+.form-wrap textarea{height:100px;resize:vertical}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.btn-submit{width:100%;padding:16px;background:var(--pink);color:var(--navy);border:none;border-radius:8px;font-size:17px;font-weight:700;cursor:pointer;font-family:'Noto Sans KR';transition:all .3s;text-shadow:none;box-shadow:0 0 20px rgba(255,64,129,.3)}
+.btn-submit:hover{box-shadow:0 0 40px rgba(255,64,129,.5);transform:translateY(-2px)}
+/* Footer */
+footer{background:rgba(0,0,0,.4);padding:60px 20px 30px;text-align:center;border-top:1px solid rgba(255,255,255,.05)}
+.footer-logo{font-family:'Outfit';font-size:28px;font-weight:800;color:var(--pink);text-shadow:0 0 10px var(--pink);margin-bottom:16px}
+.footer-links{display:flex;justify-content:center;gap:24px;margin-bottom:20px;flex-wrap:wrap}
+.footer-links a{color:rgba(245,245,245,.5);text-decoration:none;font-size:13px;transition:color .3s}
+.footer-links a:hover{color:var(--pink)}
+footer p{color:rgba(245,245,245,.3);font-size:12px}
+/* Floating CTA */
+.floating-cta{position:fixed;bottom:30px;right:30px;z-index:999;background:var(--pink);color:var(--navy);width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 0 20px var(--pink);border:none;transition:all .3s;animation:pulse 2s infinite}
+.floating-cta:hover{transform:scale(1.1);box-shadow:0 0 40px var(--pink)}
+@keyframes pulse{0%,100%{box-shadow:0 0 20px var(--pink)}50%{box-shadow:0 0 40px var(--pink),0 0 60px rgba(255,64,129,.3)}}
+/* Mobile */
+@media(max-width:768px){
+.nav-links{display:none;position:fixed;top:0;left:0;width:100%;height:100vh;background:rgba(13,27,42,.98);flex-direction:column;align-items:center;justify-content:center;gap:32px}
+.nav-links.open{display:flex}
+.hamburger{display:flex}
+.brand-grid,.menu-grid,.startup-steps{grid-template-columns:1fr}
+.menu-grid{grid-template-columns:repeat(2,1fr)}
+.stats-row{grid-template-columns:repeat(2,1fr);gap:30px}
+.form-row{grid-template-columns:1fr}
+.hero-btns{flex-direction:column;align-items:center}
+nav{padding:14px 20px}
+}
+@media(max-width:480px){
+.menu-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+<!-- Preloader -->
+<div id="preloader">
+<div class="preloader-neon">MOONLIGHT POCHA</div>
+<div class="preloader-bar"><span></span></div>
+</div>
+
+<!-- Nav -->
+<nav id="nav">
+<a href="#" class="nav-logo">MOONLIGHT</a>
+<ul class="nav-links" id="navLinks">
+<li><a href="#brand">브랜드</a></li>
+<li><a href="#menu">메뉴</a></li>
+<li><a href="#startup">창업안내</a></li>
+<li><a href="#contact">상담신청</a></li>
+</ul>
+<button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">창업상담</button>
+<div class="hamburger" id="hamburger" onclick="document.getElementById('navLinks').classList.toggle('open')">
+<span></span><span></span><span></span>
+</div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="hero">
+<div class="hero-bg"></div>
+<div class="hero-overlay"></div>
+<canvas id="starCanvas"></canvas>
+<div class="hero-content">
+<p class="hero-sub">Franchise Launching 2026</p>
+<h1 class="hero-title"><span class="neon-pink">MOONLIGHT</span><br><span class="neon-cyan">POCHA</span></h1>
+<p class="hero-title-kr">달빛포차</p>
+<p class="hero-desc">밤하늘 아래 빛나는 한 잔의 낭만.<br>네온 불빛 가득한 감성 포차 프랜차이즈.</p>
+<div class="hero-btns">
+<a href="#contact" class="btn-neon">창업 상담 신청</a>
+<a href="#brand" class="btn-neon cyan">브랜드 소개</a>
+</div>
+</div>
+</section>
+
+<!-- Marquee -->
+<div class="marquee-band">
+<div class="marquee-track">
+<span>&#9733; 달빛포차 &mdash; MOONLIGHT POCHA &mdash; 네온감성 포차 &mdash; 창업문의 1577-0000 &mdash;</span>
+<span>&#9733; 달빛포차 &mdash; MOONLIGHT POCHA &mdash; 네온감성 포차 &mdash; 창업문의 1577-0000 &mdash;</span>
+<span>&#9733; 달빛포차 &mdash; MOONLIGHT POCHA &mdash; 네온감성 포차 &mdash; 창업문의 1577-0000 &mdash;</span>
+<span>&#9733; 달빛포차 &mdash; MOONLIGHT POCHA &mdash; 네온감성 포차 &mdash; 창업문의 1577-0000 &mdash;</span>
+</div>
+</div>
+
+<!-- Brand -->
+<section class="section" id="brand">
+<div class="reveal">
+<p class="section-label">About Brand</p>
+<h2 class="section-title">밤을 <span class="pink">빛나게</span> 하다</h2>
+<p class="section-desc">달빛포차는 복고 감성과 현대적 세련미를 결합한 네온 포차 브랜드입니다. 밤하늘 아래 빛나는 네온사인, 감성적인 공간에서 특별한 한 잔을 즐기세요.</p>
+</div>
+<div class="brand-grid">
+<div class="brand-card reveal">
+<div class="brand-icon">&#127769;</div>
+<h3>네온 감성 인테리어</h3>
+<p>레트로 네온사인과 빈티지 소품으로 완성하는 몰입감 넘치는 야간 포차 공간. SNS 필수 촬영 스팟으로 자연스러운 바이럴을 만들어냅니다.</p>
+</div>
+<div class="brand-card reveal">
+<div class="brand-icon">&#127863;</div>
+<h3>시그니처 주류 & 안주</h3>
+<p>전문 셰프가 개발한 프리미엄 안주 라인업과 독자적인 하이볼, 칵테일 레시피. 맛과 비주얼을 동시에 잡는 메뉴 구성입니다.</p>
+</div>
+<div class="brand-card reveal">
+<div class="brand-icon">&#128640;</div>
+<h3>빠른 투자 회수</h3>
+<p>평균 8개월 내 투자금 회수. 저비용 오퍼레이션과 높은 객단가로 안정적인 수익을 창출하는 검증된 비즈니스 모델입니다.</p>
+</div>
+<div class="brand-card reveal">
+<div class="brand-icon">&#127891;</div>
+<h3>체계적 교육 시스템</h3>
+<p>오픈 전 4주 집중 교육, 오픈 후 슈퍼바이저 상주 지원. 주류 경험 없이도 성공적인 매장 운영이 가능합니다.</p>
+</div>
+</div>
+</section>
+
+<!-- Menu -->
+<section class="section" id="menu">
+<div class="reveal">
+<p class="section-label">Signature Menu</p>
+<h2 class="section-title">달빛 아래 <span class="pink">시그니처</span></h2>
+<p class="section-desc">밤의 감성을 채우는 특별한 안주와 주류 메뉴를 만나보세요.</p>
+</div>
+<div class="menu-grid">
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1504544750208-dc0358e63f7f?w=400&q=80" alt="불닭발" class="menu-img">
+<div class="menu-info"><h4>&#128293; 네온 불닭발</h4><p>달빛포차 시그니처 매운맛</p><span class="price">19,000원</span></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1590301157890-4810ed352733?w=400&q=80" alt="곱창" class="menu-img">
+<div class="menu-info"><h4>&#127860; 소곱창 철판</h4><p>프리미엄 국내산 소곱창</p><span class="price">25,000원</span></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1635363638580-c2809d049eee?w=400&q=80" alt="떡볶이" class="menu-img">
+<div class="menu-info"><h4>&#127798; 달빛 떡볶이</h4><p>치즈 폭포 로제 떡볶이</p><span class="price">14,000원</span></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1541592106381-b31e9677c0e5?w=400&q=80" alt="감자튀김" class="menu-img">
+<div class="menu-info"><h4>&#127839; 트러플 감자튀김</h4><p>트러플오일 & 파마산</p><span class="price">12,000원</span></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1569529465841-dfecdab7503b?w=400&q=80" alt="하이볼" class="menu-img">
+<div class="menu-info"><h4>&#127864; 문라이트 하이볼</h4><p>시그니처 자몽 하이볼</p><span class="price">9,000원</span></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=400&q=80" alt="소주" class="menu-img">
+<div class="menu-info"><h4>&#127862; 프리미엄 소주</h4><p>과일 인퓨전 소주 5종</p><span class="price">7,000원</span></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1535958636474-b021ee887b13?w=400&q=80" alt="맥주" class="menu-img">
+<div class="menu-info"><h4>&#127866; 크래프트 맥주</h4><p>달빛포차 전용 생맥주</p><span class="price">6,000원</span></div>
+</div>
+<div class="menu-card reveal">
+<img src="https://images.unsplash.com/photo-1546833998-877b37c2e5c6?w=400&q=80" alt="모둠" class="menu-img">
+<div class="menu-info"><h4>&#127881; 달빛 모둠 세트</h4><p>인기 안주 4종 + 주류</p><span class="price">55,000원</span></div>
+</div>
+</div>
+</section>
+
+<!-- Neon Band -->
+<div class="marquee-band cyan">
+<div class="marquee-track" style="animation-direction:reverse">
+<span>&#9733; 월 매출 평균 4,500만원 &mdash; 가맹점 120호점 돌파 &mdash; 투자 회수 8개월 &mdash; 폐점률 2% &mdash;</span>
+<span>&#9733; 월 매출 평균 4,500만원 &mdash; 가맹점 120호점 돌파 &mdash; 투자 회수 8개월 &mdash; 폐점률 2% &mdash;</span>
+<span>&#9733; 월 매출 평균 4,500만원 &mdash; 가맹점 120호점 돌파 &mdash; 투자 회수 8개월 &mdash; 폐점률 2% &mdash;</span>
+<span>&#9733; 월 매출 평균 4,500만원 &mdash; 가맹점 120호점 돌파 &mdash; 투자 회수 8개월 &mdash; 폐점률 2% &mdash;</span>
+</div>
+</div>
+
+<!-- Startup -->
+<section class="section" id="startup">
+<div class="reveal">
+<p class="section-label">Franchise</p>
+<h2 class="section-title">달빛포차 <span class="pink">창업안내</span></h2>
+<p class="section-desc">성공적인 포차 창업, 달빛포차가 함께합니다.</p>
+</div>
+<div class="stats-row reveal">
+<div><div class="stat-num" data-target="120">0</div><div class="stat-label">전국 가맹점수</div></div>
+<div><div class="stat-num" data-target="4500">0</div><div class="stat-label">월 평균 매출(만원)</div></div>
+<div><div class="stat-num" data-target="98">0</div><div class="stat-label">가맹점 생존율(%)</div></div>
+<div><div class="stat-num" data-target="8">0</div><div class="stat-label">평균 회수기간(개월)</div></div>
+</div>
+<div class="startup-steps">
+<div class="step-card reveal"><div class="step-num">01</div><h4>상담 & 문의</h4><p>전화 또는 온라인으로 창업 상담을 신청하세요. 전문 컨설턴트가 맞춤 상담을 진행합니다.</p></div>
+<div class="step-card reveal"><div class="step-num">02</div><h4>입지 분석</h4><p>상권 분석 전문가가 최적의 입지를 함께 선정합니다. 데이터 기반 분석으로 리스크를 최소화합니다.</p></div>
+<div class="step-card reveal"><div class="step-num">03</div><h4>교육 & 시공</h4><p>4주 집중 교육과 인테리어 시공을 병행합니다. 네온 감성 공간이 완성됩니다.</p></div>
+<div class="step-card reveal"><div class="step-num">04</div><h4>Grand Open</h4><p>오픈 마케팅 지원과 슈퍼바이저 상주 지원으로 안정적인 매장 안착을 돕습니다.</p></div>
+</div>
+</section>
+
+<!-- Contact -->
+<section class="section" id="contact">
+<div class="reveal">
+<p class="section-label">Contact Us</p>
+<h2 class="section-title">창업 <span class="pink">상담 신청</span></h2>
+<p class="section-desc">아래 양식을 작성해 주시면 24시간 내 전문 상담사가 연락 드립니다.</p>
+</div>
+<div class="form-wrap reveal">
+<div class="form-row">
+<input type="text" placeholder="이름">
+<input type="tel" placeholder="연락처">
+</div>
+<input type="email" placeholder="이메일">
+<select><option value="">희망 지역 선택</option><option>서울</option><option>경기/인천</option><option>부산/경남</option><option>대구/경북</option><option>대전/충청</option><option>광주/전라</option><option>강원/제주</option></select>
+<select><option value="">예상 투자금액</option><option>5,000만원 이하</option><option>5,000~8,000만원</option><option>8,000만원~1억</option><option>1억 이상</option></select>
+<textarea placeholder="문의 내용을 입력해주세요"></textarea>
+<button class="btn-submit">상담 신청하기</button>
+</div>
+</section>
+
+<!-- Footer -->
+<footer>
+<div class="footer-logo">MOONLIGHT POCHA</div>
+<div class="footer-links">
+<a href="#">브랜드 소개</a><a href="#">메뉴</a><a href="#">창업안내</a><a href="#">가맹점 현황</a><a href="#">개인정보처리방침</a>
+</div>
+<p>&copy; 2026 달빛포차 MOONLIGHT POCHA. All rights reserved. 서울특별시 강남구 테헤란로 123 | 대표전화 1577-0000</p>
+</footer>
+
+<!-- Floating CTA -->
+<button class="floating-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">&#9742;</button>
+
+<script>
+// Preloader
+window.addEventListener('load',()=>{setTimeout(()=>{document.getElementById('preloader').classList.add('hide')},2200)});
+// Nav scroll
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('scrolled',window.scrollY>60)});
+// Star particles
+(function(){const c=document.getElementById('starCanvas'),x=c.getContext('2d');let w,h,stars=[];function resize(){w=c.width=window.innerWidth;h=c.height=window.innerHeight}
+function init(){stars=[];for(let i=0;i<120;i++)stars.push({x:Math.random()*w,y:Math.random()*h,r:Math.random()*2+.5,a:Math.random(),d:Math.random()*.02+.005,s:Math.random()*.5+.1})}
+function draw(){x.clearRect(0,0,w,h);stars.forEach(s=>{s.a+=s.d;if(s.a>1)s.d=-Math.abs(s.d);if(s.a<0)s.d=Math.abs(s.d);s.y-=s.s;if(s.y<-10){s.y=h+10;s.x=Math.random()*w}
+x.beginPath();x.arc(s.x,s.y,s.r,0,Math.PI*2);x.fillStyle=`rgba(255,215,64,${s.a})`;x.fill()});requestAnimationFrame(draw)}
+resize();init();draw();window.addEventListener('resize',()=>{resize();init()})})();
+// Reveal
+const obs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('active')})},{threshold:.15});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+// Counter
+let counted=false;const cObs=new IntersectionObserver((entries)=>{entries.forEach(e=>{if(e.isIntersecting&&!counted){counted=true;document.querySelectorAll('.stat-num').forEach(n=>{const t=+n.dataset.target;let c=0;const step=t/60;const timer=setInterval(()=>{c+=step;if(c>=t){n.textContent=t.toLocaleString();clearInterval(timer)}else{n.textContent=Math.floor(c).toLocaleString()}},30)})}})},{threshold:.5});
+document.querySelector('.stats-row')&&cObs.observe(document.querySelector('.stats-row'));
+</script>
+</body>
+</html>

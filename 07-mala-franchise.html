@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>화룡마라 — 한국형 마라탕 프랜차이즈</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--red:#E53935;--red-dark:#B71C1C;--orange:#FF6D00;--gold:#FFB300;--black:#0A0A0A;--dark:#121212;--dark2:#1A1A1A;--white:#fff;--gray:#777;--glow:rgba(229,57,53,.15)}
+html{scroll-behavior:smooth}
+body{font-family:'Noto Sans KR',sans-serif;color:var(--white);background:var(--black);overflow-x:hidden}
+.eng{font-family:'Outfit',sans-serif}
+
+/* ===== LOADER ===== */
+#ld{position:fixed;inset:0;background:var(--black);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:20px;transition:opacity .8s .2s,visibility .8s .2s}
+#ld.out{opacity:0;visibility:hidden}
+#ld .fire{font-size:3rem;animation:firePulse 1s ease infinite}
+@keyframes firePulse{0%,100%{transform:scale(1);filter:brightness(1)}50%{transform:scale(1.15);filter:brightness(1.3)}}
+#ld h2{font-family:'Outfit',sans-serif;font-size:1.8rem;font-weight:900;letter-spacing:8px;background:linear-gradient(135deg,var(--red),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+#ld .bar{width:120px;height:2px;background:rgba(229,57,53,.15);border-radius:2px;overflow:hidden}
+#ld .bar i{display:block;width:100%;height:100%;background:linear-gradient(90deg,var(--red),var(--orange));animation:lBar 2s ease forwards;transform-origin:left}
+@keyframes lBar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
+
+/* ===== NAV ===== */
+nav{position:fixed;top:0;left:0;right:0;z-index:999;padding:18px 48px;display:flex;justify-content:space-between;align-items:center;transition:all .35s}
+nav.s{background:rgba(10,10,10,.95);backdrop-filter:blur(20px);box-shadow:0 1px 30px rgba(229,57,53,.08);padding:12px 48px}
+.n-logo{font-family:'Outfit',sans-serif;font-size:1.2rem;font-weight:900;color:var(--white);text-decoration:none;letter-spacing:3px}
+.n-logo em{font-style:normal;background:linear-gradient(135deg,var(--red),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.n-right{display:flex;align-items:center;gap:28px}
+.n-links{display:flex;gap:28px}
+.n-links a{color:rgba(255,255,255,.5);text-decoration:none;font-size:.72rem;letter-spacing:2px;font-weight:500;transition:all .3s;font-family:'Outfit',sans-serif}
+.n-links a:hover{color:var(--red);text-shadow:0 0 12px rgba(229,57,53,.4)}
+.n-cta{padding:10px 24px;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border-radius:6px;text-decoration:none;font-size:.75rem;font-weight:700;letter-spacing:1px;transition:all .3s;box-shadow:0 2px 12px rgba(229,57,53,.3)}
+.n-cta:hover{box-shadow:0 4px 24px rgba(229,57,53,.5);transform:translateY(-1px)}
+
+/* ===== HERO ===== */
+.hero{height:100vh;min-height:750px;position:relative;display:flex;align-items:center;overflow:hidden}
+.hero video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.hero-fallback{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=1920&q=80') center/cover}
+.hero-dim{position:absolute;inset:0;background:linear-gradient(90deg,rgba(10,10,10,.95) 0%,rgba(10,10,10,.7) 45%,rgba(10,10,10,.3) 100%)}
+/* Smoke effect */
+.smoke{position:absolute;inset:0;z-index:1;pointer-events:none;overflow:hidden}
+.smoke-particle{position:absolute;bottom:-100px;width:200px;height:200px;background:radial-gradient(circle,rgba(229,57,53,.06) 0%,transparent 70%);border-radius:50%;animation:smokeRise linear infinite}
+@keyframes smokeRise{0%{transform:translateY(0) scale(1);opacity:0}10%{opacity:.6}80%{opacity:.2}100%{transform:translateY(-120vh) scale(2.5);opacity:0}}
+/* Ember particles */
+.embers{position:absolute;inset:0;z-index:1;pointer-events:none}
+.ember{position:absolute;width:3px;height:3px;background:var(--orange);border-radius:50%;box-shadow:0 0 6px var(--orange),0 0 12px rgba(229,57,53,.5);animation:emberFloat linear infinite}
+@keyframes emberFloat{0%{transform:translateY(0) translateX(0);opacity:0}10%{opacity:1}50%{transform:translateY(-50vh) translateX(30px);opacity:.6}100%{transform:translateY(-100vh) translateX(-20px);opacity:0}}
+.hero-neon{position:absolute;right:60px;top:50%;transform:translateY(-50%);font-family:'Outfit',sans-serif;font-size:10rem;font-weight:900;color:transparent;-webkit-text-stroke:2px rgba(229,57,53,.15);opacity:.2;letter-spacing:-6px;pointer-events:none;animation:neonFlicker 4s ease infinite;text-shadow:0 0 40px rgba(229,57,53,.1)}
+@keyframes neonFlicker{0%,100%{opacity:.2}50%{opacity:.35}52%{opacity:.15}54%{opacity:.3}}
+.hero-inner{position:relative;z-index:2;padding:0 80px;max-width:720px}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(229,57,53,.1);border:1px solid rgba(229,57,53,.2);padding:8px 20px;border-radius:6px;font-size:.68rem;letter-spacing:3px;color:var(--red);margin-bottom:28px;font-family:'Outfit',sans-serif;backdrop-filter:blur(4px);opacity:0;animation:hUp .8s ease 2.2s forwards}
+.hero-tag i{width:6px;height:6px;background:var(--red);border-radius:50%;box-shadow:0 0 8px var(--red);animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1;box-shadow:0 0 8px var(--red)}50%{opacity:.3;box-shadow:0 0 2px var(--red)}}
+.hero h1{font-size:3.8rem;font-weight:900;line-height:1.12;margin-bottom:14px;opacity:0;animation:hUp 1s ease 2.4s forwards}
+.hero h1 em{font-style:normal;background:linear-gradient(135deg,var(--red),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-shadow:none}
+.hero-sub{font-size:.95rem;color:rgba(255,255,255,.45);font-weight:300;line-height:1.9;margin-bottom:36px;opacity:0;animation:hUp .8s ease 2.7s forwards}
+.hero-btns{display:flex;gap:12px;opacity:0;animation:hUp .8s ease 2.9s forwards}
+.btn-fire{padding:16px 40px;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;border-radius:6px;text-decoration:none;font-weight:700;font-size:.92rem;transition:all .3s;box-shadow:0 4px 24px rgba(229,57,53,.35);position:relative;overflow:hidden}
+.btn-fire::before{content:'';position:absolute;inset:-2px;background:linear-gradient(135deg,var(--orange),var(--red),var(--orange));border-radius:8px;z-index:-1;opacity:0;transition:opacity .3s}
+.btn-fire:hover{transform:translateY(-2px);box-shadow:0 8px 36px rgba(229,57,53,.5)}
+.btn-fire:hover::before{opacity:1}
+.btn-o{padding:16px 34px;border:1.5px solid rgba(255,255,255,.15);color:rgba(255,255,255,.7);border-radius:6px;text-decoration:none;font-weight:500;font-size:.92rem;transition:all .3s;backdrop-filter:blur(4px)}
+.btn-o:hover{border-color:var(--red);color:var(--red)}
+@keyframes hUp{from{opacity:0;transform:translateY(25px)}to{opacity:1;transform:translateY(0)}}
+/* Stats bar */
+.hero-stats{position:absolute;bottom:0;left:0;right:0;z-index:3;background:rgba(10,10,10,.9);backdrop-filter:blur(16px);border-top:1px solid rgba(229,57,53,.08)}
+.hero-stats-inner{max-width:1200px;margin:0 auto;padding:20px 48px;display:flex;justify-content:space-between}
+.hero-stat{text-align:center}
+.hero-stat b{display:block;font-family:'Outfit',sans-serif;font-size:1.5rem;font-weight:800;background:linear-gradient(135deg,var(--red),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-stat span{font-size:.7rem;color:rgba(255,255,255,.35)}
+
+/* ===== MARQUEE ===== */
+.mq{padding:14px 0;background:var(--red);overflow:hidden;position:relative}
+.mq::before{content:'';position:absolute;inset:0;background:linear-gradient(90deg,var(--red-dark),transparent 20%,transparent 80%,var(--red-dark));z-index:2;pointer-events:none}
+.mq-track{display:flex;gap:48px;animation:mqA 16s linear infinite;width:max-content}
+.mq-track span{font-family:'Outfit',sans-serif;font-size:.72rem;font-weight:700;letter-spacing:5px;color:rgba(255,255,255,.75);white-space:nowrap}
+@keyframes mqA{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+
+/* ===== SHARED ===== */
+.con{max-width:1200px;margin:0 auto;padding:0 32px}
+.label{font-family:'Outfit',sans-serif;font-size:.68rem;letter-spacing:5px;color:var(--red);font-weight:700;margin-bottom:12px;text-shadow:0 0 20px rgba(229,57,53,.3)}
+.stitle{font-size:2.5rem;font-weight:900;line-height:1.25;margin-bottom:16px}
+.stitle em{font-style:normal;background:linear-gradient(135deg,var(--red),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.sdesc{font-size:.92rem;color:var(--gray);font-weight:300;line-height:1.9;max-width:540px}
+.sr{opacity:0;transform:translateY(28px);transition:all .8s cubic-bezier(.16,1,.3,1)}.sr.on{opacity:1;transform:translateY(0)}
+.d1{transition-delay:.12s}.d2{transition-delay:.24s}.d3{transition-delay:.36s}.d4{transition-delay:.48s}
+
+/* ===== BRAND ===== */
+.brand{padding:130px 0;background:var(--dark);position:relative;overflow:hidden}
+.brand::before{content:'';position:absolute;top:-200px;right:-200px;width:500px;height:500px;background:radial-gradient(circle,rgba(229,57,53,.06) 0%,transparent 70%);pointer-events:none}
+.brand-grid{display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.brand-img{position:relative;border-radius:16px;overflow:hidden;height:460px}
+.brand-img img{width:100%;height:100%;object-fit:cover;transition:transform 8s ease}
+.brand-img:hover img{transform:scale(1.08)}
+.brand-img::after{content:'';position:absolute;inset:0;background:linear-gradient(180deg,transparent 50%,rgba(10,10,10,.7) 100%)}
+.brand-img-badge{position:absolute;bottom:20px;left:20px;z-index:2;background:linear-gradient(135deg,var(--red),var(--orange));color:#fff;padding:10px 20px;border-radius:8px;font-size:.78rem;font-weight:700;box-shadow:0 4px 16px rgba(229,57,53,.4)}
+.brand-feats{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:30px}
+.brand-feat{display:flex;align-items:center;gap:10px;padding:16px;background:rgba(229,57,53,.04);border:1px solid rgba(229,57,53,.06);border-radius:12px;font-size:.85rem;font-weight:600;transition:all .3s}
+.brand-feat:hover{background:rgba(229,57,53,.08);border-color:rgba(229,57,53,.15);transform:translateX(4px)}
+.brand-feat i{font-style:normal;font-size:1.3rem}
+
+/* ===== MENU ===== */
+.menu{padding:130px 0;background:var(--black);position:relative}
+.menu::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(229,57,53,.2),transparent)}
+.menu-header{text-align:center;margin-bottom:64px}
+.menu-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.mcard{border-radius:16px;overflow:hidden;background:var(--dark);transition:all .4s;cursor:pointer;position:relative}
+.mcard::before{content:'';position:absolute;inset:-1px;border-radius:17px;background:linear-gradient(135deg,var(--red),transparent,var(--orange));z-index:0;opacity:0;transition:opacity .4s}
+.mcard:hover::before{opacity:1}
+.mcard>*{position:relative;z-index:1}
+.mcard:hover{transform:translateY(-8px)}
+.mcard-img{height:240px;overflow:hidden;position:relative}
+.mcard-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.mcard:hover .mcard-img img{transform:scale(1.08)}
+.mcard-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:60px;background:linear-gradient(transparent,var(--dark))}
+.mcard-hot{position:absolute;top:12px;right:12px;background:linear-gradient(135deg,var(--red),var(--orange));color:#fff;padding:5px 12px;border-radius:6px;font-size:.65rem;font-weight:800;letter-spacing:1px;box-shadow:0 2px 10px rgba(229,57,53,.4);z-index:2}
+.mcard-body{padding:22px;background:var(--dark)}
+.mcard-body h3{font-size:1.05rem;font-weight:700;margin-bottom:6px}
+.mcard-body p{font-size:.78rem;color:var(--gray);font-weight:300}
+.mcard-spicy{display:flex;gap:3px;margin-top:10px}
+.mcard-spicy i{font-style:normal;font-size:.8rem;filter:drop-shadow(0 0 4px rgba(229,57,53,.4))}
+
+/* ===== VISUAL BAND (Video) ===== */
+.vband{position:relative;height:500px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.vband video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.vband-fallback{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1563245372-f21724e3856d?w=1920&q=80') center/cover;background-attachment:fixed}
+.vband-dim{position:absolute;inset:0;background:linear-gradient(135deg,rgba(183,28,28,.75),rgba(10,10,10,.75))}
+.vband-inner{position:relative;z-index:2;text-align:center;color:#fff;padding:0 24px}
+.vband-inner h2{font-family:'Outfit',sans-serif;font-size:3rem;font-weight:900;margin-bottom:12px;text-shadow:0 4px 30px rgba(0,0,0,.5)}
+.vband-inner h2 em{font-style:normal;color:var(--orange)}
+.vband-inner p{font-size:1.05rem;font-weight:300;opacity:.7;max-width:500px;margin:0 auto}
+.vband-counter{display:flex;justify-content:center;gap:60px;margin-top:40px}
+.vband-counter div{text-align:center}
+.vband-counter b{display:block;font-family:'Outfit',sans-serif;font-size:2.8rem;font-weight:900;color:var(--orange);text-shadow:0 0 30px rgba(255,109,0,.3)}
+.vband-counter span{font-size:.75rem;opacity:.6}
+
+/* ===== FRANCHISE ===== */
+.fran{padding:130px 0;background:var(--dark);position:relative;overflow:hidden}
+.fran::before{content:'';position:absolute;bottom:-300px;left:-300px;width:600px;height:600px;background:radial-gradient(circle,rgba(229,57,53,.04) 0%,transparent 70%)}
+.fran-header{text-align:center;margin-bottom:64px}
+.fran-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.fcard{padding:40px 28px;background:rgba(229,57,53,.03);border:1px solid rgba(229,57,53,.06);border-radius:20px;text-align:center;transition:all .4s;position:relative;overflow:hidden}
+.fcard::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent,rgba(229,57,53,.05),transparent 30%);animation:fcardRotate 8s linear infinite;opacity:0;transition:opacity .3s}
+.fcard:hover::before{opacity:1}
+@keyframes fcardRotate{from{transform:rotate(0)}to{transform:rotate(360deg)}}
+.fcard:hover{border-color:rgba(229,57,53,.2);transform:translateY(-6px);box-shadow:0 20px 50px rgba(229,57,53,.08)}
+.fcard-icon{font-size:2.8rem;margin-bottom:16px;filter:drop-shadow(0 0 12px rgba(229,57,53,.3))}
+.fcard h3{font-size:1.05rem;font-weight:700;margin-bottom:10px}
+.fcard p{font-size:.82rem;color:var(--gray);font-weight:300;line-height:1.7}
+.fcard .val{display:block;margin-top:18px;font-family:'Outfit',sans-serif;font-size:2rem;font-weight:900;background:linear-gradient(135deg,var(--red),var(--orange));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+
+/* ===== STORES ===== */
+.stores{padding:130px 0;background:var(--black)}
+.stores-header{text-align:center;margin-bottom:60px}
+.stores-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.scard{border-radius:16px;overflow:hidden;background:var(--dark);transition:all .4s;border:1px solid rgba(255,255,255,.03)}
+.scard:hover{transform:translateY(-6px);border-color:rgba(229,57,53,.1);box-shadow:0 16px 40px rgba(0,0,0,.3)}
+.scard-img{height:220px;overflow:hidden;position:relative}
+.scard-img img{width:100%;height:100%;object-fit:cover;transition:transform .6s}
+.scard:hover .scard-img img{transform:scale(1.06)}
+.scard-img::after{content:'';position:absolute;bottom:0;left:0;right:0;height:80px;background:linear-gradient(transparent,var(--dark))}
+.scard-body{padding:22px}
+.scard-tag{display:inline-block;background:rgba(229,57,53,.1);color:var(--red);padding:5px 12px;border-radius:6px;font-size:.65rem;font-weight:700;letter-spacing:1px;margin-bottom:10px}
+.scard-body h3{font-size:1rem;font-weight:700;margin-bottom:4px}
+.scard-body p{font-size:.78rem;color:var(--gray)}
+
+/* ===== CTA ===== */
+.cta{padding:130px 0;background:var(--dark);position:relative;overflow:hidden}
+.cta::before{content:'';position:absolute;top:50%;left:50%;width:800px;height:800px;transform:translate(-50%,-50%);background:radial-gradient(circle,rgba(229,57,53,.03) 0%,transparent 60%);pointer-events:none}
+.cta-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:start}
+.cta-promo{background:linear-gradient(135deg,rgba(229,57,53,.08),rgba(255,109,0,.05));border:1px solid rgba(229,57,53,.1);border-radius:16px;padding:28px;margin-bottom:28px;position:relative;overflow:hidden}
+.cta-promo::before{content:'🔥';position:absolute;top:-10px;right:-10px;font-size:4rem;opacity:.08}
+.cta-promo h3{font-size:1.15rem;font-weight:800;margin-bottom:8px}
+.cta-promo p{font-size:.88rem;color:var(--gray)}
+.cta-promo b{color:var(--red)}
+.cta-ci{display:flex;align-items:center;gap:14px;padding:16px;background:rgba(229,57,53,.03);border:1px solid rgba(229,57,53,.04);border-radius:12px;margin-bottom:12px;transition:all .3s}
+.cta-ci:hover{background:rgba(229,57,53,.06);border-color:rgba(229,57,53,.1)}
+.cta-ci i{font-style:normal;font-size:1.4rem}
+.cta-ci small{display:block;font-size:.7rem;color:var(--gray)}
+.cta-ci strong{font-size:1rem}
+.cta-form{background:var(--dark2);border:1px solid rgba(229,57,53,.06);border-radius:24px;padding:44px;position:relative;overflow:hidden}
+.cta-form::before{content:'';position:absolute;top:-1px;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--orange),var(--red))}
+.cta-form h3{font-size:1.2rem;font-weight:800;margin-bottom:28px}
+.fg{margin-bottom:16px}
+.fg label{display:block;font-size:.78rem;margin-bottom:6px;color:rgba(255,255,255,.4)}
+.fg input,.fg select,.fg textarea{width:100%;padding:14px 18px;background:rgba(229,57,53,.03);border:1px solid rgba(229,57,53,.06);border-radius:10px;color:#fff;font-size:.88rem;font-family:'Noto Sans KR',sans-serif;transition:all .3s}
+.fg input::placeholder,.fg textarea::placeholder{color:rgba(255,255,255,.18)}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--red);box-shadow:0 0 16px rgba(229,57,53,.1);background:rgba(229,57,53,.05)}
+.fg select option{color:#333;background:#fff}
+.fg-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.cta-submit{width:100%;padding:16px;background:linear-gradient(135deg,var(--red),var(--red-dark));border:none;border-radius:10px;color:#fff;font-size:1rem;font-weight:700;cursor:pointer;transition:all .3s;font-family:'Noto Sans KR',sans-serif;margin-top:8px;box-shadow:0 6px 24px rgba(229,57,53,.3);letter-spacing:1px}
+.cta-submit:hover{box-shadow:0 10px 40px rgba(229,57,53,.45);transform:translateY(-2px)}
+
+/* ===== FOOTER ===== */
+footer{padding:50px 32px 28px;background:var(--black);border-top:1px solid rgba(229,57,53,.06);text-align:center;color:rgba(255,255,255,.3)}
+.ft-brand{font-family:'Outfit',sans-serif;font-size:1rem;font-weight:900;letter-spacing:5px;background:linear-gradient(135deg,rgba(229,57,53,.3),rgba(255,109,0,.3));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:12px}
+.ft-info{font-size:.75rem;line-height:1.8;margin-bottom:14px}
+.ft-copy{font-size:.65rem;opacity:.3}
+
+/* ===== FLOAT ===== */
+.float{position:fixed;bottom:28px;right:28px;z-index:99;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;padding:15px 26px;border-radius:10px;text-decoration:none;font-weight:700;font-size:.88rem;box-shadow:0 8px 32px rgba(229,57,53,.4);transition:all .3s;display:flex;align-items:center;gap:8px}
+.float:hover{transform:translateY(-3px);box-shadow:0 12px 44px rgba(229,57,53,.55)}
+.float::before{content:'';position:absolute;inset:-2px;border-radius:12px;background:linear-gradient(135deg,var(--orange),var(--red));z-index:-1;opacity:0;transition:opacity .3s}
+.float:hover::before{opacity:1}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+nav{padding:14px 18px}.n-links{display:none}
+.hero-inner{padding:0 24px}.hero h1{font-size:2.2rem}.hero-neon{display:none}
+.hero-stats-inner{flex-wrap:wrap;gap:16px;justify-content:center;padding:16px 24px}
+.brand-grid,.cta-grid{grid-template-columns:1fr;gap:36px}
+.brand-img{height:300px}
+.menu-grid{grid-template-columns:repeat(2,1fr)}
+.fran-grid,.stores-grid{grid-template-columns:1fr}
+.vband{height:400px}
+.vband-inner h2{font-size:2rem}
+.vband-counter{gap:30px;flex-wrap:wrap}
+.vband-counter b{font-size:2rem}
+.stitle{font-size:1.9rem}
+.fg-row{grid-template-columns:1fr}
+.cta-form{padding:28px}
+.float{bottom:16px;right:16px;padding:13px 20px;font-size:.82rem}
+.smoke-particle{width:100px;height:100px}
+}
+</style>
+</head>
+<body>
+
+<div id="ld">
+<div class="fire">🔥</div>
+<h2 class="eng">HWALYONG</h2>
+<div class="bar"><i></i></div>
+</div>
+
+<nav id="nav">
+<a href="#" class="n-logo eng">HWA<em>LYONG</em></a>
+<div class="n-right">
+<div class="n-links">
+<a href="#brand" class="eng">BRAND</a>
+<a href="#menu" class="eng">MENU</a>
+<a href="#franchise" class="eng">FRANCHISE</a>
+<a href="#inquiry" class="eng">CONTACT</a>
+</div>
+<a href="#inquiry" class="n-cta eng">창업문의</a>
+</div>
+</nav>
+
+<section class="hero">
+<div class="hero-fallback"></div>
+<video autoplay muted loop playsinline>
+<source src="https://cdn.coverr.co/videos/coverr-cooking-chinese-food-in-a-wok-with-fire-3809/1080p.mp4" type="video/mp4">
+</video>
+<div class="hero-dim"></div>
+<div class="smoke" id="smoke"></div>
+<div class="embers" id="embers"></div>
+<div class="hero-neon eng">麻辣</div>
+<div class="hero-inner">
+<div class="hero-tag eng"><i></i> KOREAN MALA FRANCHISE</div>
+<h1>한국인의 입맛에<br>맞춘 <em>마라탕</em></h1>
+<p class="hero-sub">자체 개발 FDA 인증 소스 · 오픈 주방 시스템 · 전국 180+ 매장<br>MZ를 넘어 모든 세대가 함께하는 마라탕의 새 시대</p>
+<div class="hero-btns">
+<a href="#inquiry" class="btn-fire">🔥 창업 상담 신청</a>
+<a href="#brand" class="btn-o">브랜드 소개 →</a>
+</div>
+</div>
+<div class="hero-stats">
+<div class="hero-stats-inner">
+<div class="hero-stat"><b class="eng">180+</b><span>전국 매장</span></div>
+<div class="hero-stat"><b class="eng">3.2억</b><span>평균 연매출</span></div>
+<div class="hero-stat"><b class="eng">35%</b><span>원가율</span></div>
+<div class="hero-stat"><b class="eng">0원</b><span>보증금</span></div>
+<div class="hero-stat"><b class="eng">FDA</b><span>소스 인증</span></div>
+</div>
+</div>
+</section>
+
+<div class="mq"><div class="mq-track">
+<span>HWALYONG MALA</span><span>🔥</span><span>KOREAN STYLE</span><span>🔥</span><span>180+ STORES</span><span>🔥</span><span>FDA CERTIFIED</span><span>🔥</span>
+<span>HWALYONG MALA</span><span>🔥</span><span>KOREAN STYLE</span><span>🔥</span><span>180+ STORES</span><span>🔥</span><span>FDA CERTIFIED</span><span>🔥</span>
+</div></div>
+
+<section class="brand" id="brand">
+<div class="con">
+<div class="brand-grid">
+<div class="brand-img sr">
+<img src="https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=800&q=80" alt="마라탕">
+<div class="brand-img-badge">🔥 FDA 인증 소스</div>
+</div>
+<div>
+<p class="label sr eng">BRAND STORY</p>
+<h2 class="stitle sr d1">중국식이 아닌<br><em>한국형</em> 마라탕</h2>
+<p class="sdesc sr d2">화룡마라는 중국 전통 방식만을 고집하지 않습니다. 한국인의 입맛에 최적화된 자체 개발 소스로 맵고 얼얼한 마라의 매력을 더욱 깊고 풍부하게 담아냈습니다.</p>
+<div class="brand-feats sr d3">
+<div class="brand-feat"><i>🔥</i> 자체 개발 소스</div>
+<div class="brand-feat"><i>👨‍🍳</i> 오픈 주방 시스템</div>
+<div class="brand-feat"><i>🌏</i> 미국 매장 진출</div>
+<div class="brand-feat"><i>📊</i> 초저 폐점률</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<section class="menu" id="menu">
+<div class="con">
+<div class="menu-header">
+<p class="label sr eng">SIGNATURE MENU</p>
+<h2 class="stitle sr d1">시그니처 <em>메뉴</em></h2>
+</div>
+<div class="menu-grid">
+<div class="mcard sr"><div class="mcard-img"><img src="https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=500&q=80" alt="마라탕"><div class="mcard-hot eng">BEST</div></div><div class="mcard-body"><h3>마라탕</h3><p>직접 고른 재료, 나만의 마라탕</p><div class="mcard-spicy"><i>🌶️</i><i>🌶️</i><i>🌶️</i></div></div></div>
+<div class="mcard sr d1"><div class="mcard-img"><img src="https://images.unsplash.com/photo-1563245372-f21724e3856d?w=500&q=80" alt="마라샹궈"><div class="mcard-hot eng">HOT</div></div><div class="mcard-body"><h3>마라샹궈</h3><p>불맛 가득한 볶음의 정석</p><div class="mcard-spicy"><i>🌶️</i><i>🌶️</i><i>🌶️</i><i>🌶️</i></div></div></div>
+<div class="mcard sr d2"><div class="mcard-img"><img src="https://images.unsplash.com/photo-1555126634-323283e090fa?w=500&q=80" alt="로제마라탕"><div class="mcard-hot eng" style="background:linear-gradient(135deg,#E040FB,var(--red))">NEW</div></div><div class="mcard-body"><h3>로제 마라탕</h3><p>크리미한 로제와 마라의 만남</p><div class="mcard-spicy"><i>🌶️</i><i>🌶️</i></div></div></div>
+<div class="mcard sr d3"><div class="mcard-img"><img src="https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=500&q=80" alt="꿔바로우"></div><div class="mcard-body"><h3>돈등심 꿔바로우</h3><p>바삭한 등심에 달콤한 소스</p></div></div>
+</div>
+</div>
+</section>
+
+<section class="vband">
+<div class="vband-fallback"></div>
+<video autoplay muted loop playsinline>
+<source src="https://cdn.coverr.co/videos/coverr-flames-on-a-dark-background-2921/1080p.mp4" type="video/mp4">
+</video>
+<div class="vband-dim"></div>
+<div class="vband-inner">
+<h2 class="sr eng">Spice Up <em>Your Life</em></h2>
+<p class="sr d1">얼얼함과 화끈함, 화룡마라만의 중독적인 맛</p>
+<div class="vband-counter">
+<div class="sr d2"><b class="eng counter" data-target="180">0</b><span>전국 매장</span></div>
+<div class="sr d3"><b class="eng counter" data-target="320">0</b><span>백만원 평균연매출</span></div>
+<div class="sr d4"><b class="eng counter" data-target="35">0</b><span>% 원가율</span></div>
+</div>
+</div>
+</section>
+
+<section class="fran" id="franchise">
+<div class="con">
+<div class="fran-header">
+<p class="label sr eng">FRANCHISE BENEFITS</p>
+<h2 class="stitle sr d1">창업 <em>혜택</em></h2>
+<p class="sdesc sr d2" style="margin:0 auto;text-align:center">6주년 기념 파격 프로모션 진행 중</p>
+</div>
+<div class="fran-grid">
+<div class="fcard sr"><div class="fcard-icon">🎁</div><h3>가맹비 전액 면제</h3><p>6주년 기념 한정<br>가맹비 1,000만원 면제</p><span class="val eng">₩0</span></div>
+<div class="fcard sr d1"><div class="fcard-icon">📚</div><h3>교육비 50% 할인</h3><p>550만원 → 250만원<br>체계적 조리 교육 포함</p><span class="val eng">50%↓</span></div>
+<div class="fcard sr d2"><div class="fcard-icon">💰</div><h3>보증금 0원</h3><p>부담 없는 초기 투자<br>합리적 창업비용</p><span class="val eng">FREE</span></div>
+</div>
+</div>
+</section>
+
+<section class="stores">
+<div class="con">
+<div class="stores-header">
+<p class="label sr eng">STORE TYPES</p>
+<h2 class="stitle sr d1">매장 <em>유형</em></h2>
+</div>
+<div class="stores-grid">
+<div class="scard sr"><div class="scard-img"><img src="https://images.unsplash.com/photo-1552566626-52f8b828add9?w=500&q=80" alt="소형"></div><div class="scard-body"><div class="scard-tag eng">TYPE A</div><h3>소형 매장</h3><p>식사 + 혼술 캐주얼 · 10~15평</p></div></div>
+<div class="scard sr d1"><div class="scard-img"><img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=500&q=80" alt="표준형"></div><div class="scard-body"><div class="scard-tag eng">TYPE B</div><h3>표준형 매장</h3><p>가족 고객 타깃 · 20~30평</p></div></div>
+<div class="scard sr d2"><div class="scard-img"><img src="https://images.unsplash.com/photo-1514933651103-005eec06c04b?w=500&q=80" alt="PUB형"></div><div class="scard-body"><div class="scard-tag eng">TYPE C · PUB</div><h3>PUB 매장</h3><p>안주 + 주류 특화 · 30평+</p></div></div>
+</div>
+</div>
+</section>
+
+<section class="cta" id="inquiry">
+<div class="con">
+<div class="cta-grid">
+<div>
+<p class="label sr eng">FRANCHISE INQUIRY</p>
+<h2 class="stitle sr d1">창업 <em>상담</em></h2>
+<div class="cta-promo sr d2"><h3>🔥 6주년 특별 혜택</h3><p>가맹비 <b>전액 면제</b> + 교육비 <b>50% 할인</b></p></div>
+<div class="cta-ci sr d2"><i>📞</i><div><small>전화 상담</small><strong>1668-3224</strong></div></div>
+<div class="cta-ci sr d3"><i>💬</i><div><small>카카오톡</small><strong>@화룡마라</strong></div></div>
+</div>
+<div class="cta-form sr d1">
+<h3>🔥 무료 창업 상담</h3>
+<div class="fg-row">
+<div class="fg"><label>이름</label><input placeholder="홍길동"></div>
+<div class="fg"><label>연락처</label><input placeholder="010-0000-0000"></div>
+</div>
+<div class="fg"><label>희망 지역</label><input placeholder="서울 강남, 경기 수원 등"></div>
+<div class="fg-row">
+<div class="fg"><label>창업 유형</label><select><option>신규 창업</option><option>업종 변경</option></select></div>
+<div class="fg"><label>매장 유형</label><select><option>소형 (식사형)</option><option>표준형</option><option>PUB형</option></select></div>
+</div>
+<div class="fg"><label>문의 내용</label><textarea rows="3" placeholder="궁금하신 점을 작성해주세요"></textarea></div>
+<button class="cta-submit">창업 상담 신청 →</button>
+</div>
+</div>
+</div>
+</section>
+
+<footer>
+<div class="ft-brand eng">HWALYONG MALA</div>
+<div class="ft-info">대표전화 1668-3224</div>
+<p class="ft-copy eng">&copy; 2024 HWALYONG MALA. ALL RIGHTS RESERVED.</p>
+</footer>
+
+<a href="#inquiry" class="float">🔥 창업 상담</a>
+
+<script>
+// Loader
+window.addEventListener('load',()=>{setTimeout(()=>document.getElementById('ld').classList.add('out'),2200)});
+// Nav scroll
+window.addEventListener('scroll',()=>{document.getElementById('nav').classList.toggle('s',scrollY>60)});
+// Scroll reveal
+const srs=document.querySelectorAll('.sr');
+const obs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting)e.target.classList.add('on')})},{threshold:.1});
+srs.forEach(s=>obs.observe(s));
+// Smooth scroll
+document.querySelectorAll('a[href^="#"]').forEach(a=>{a.addEventListener('click',function(e){e.preventDefault();const t=document.querySelector(this.getAttribute('href'));if(t)t.scrollIntoView({behavior:'smooth'})})});
+// Smoke particles
+const smokeEl=document.getElementById('smoke');
+for(let i=0;i<8;i++){const p=document.createElement('div');p.className='smoke-particle';p.style.left=Math.random()*100+'%';p.style.animationDuration=(Math.random()*10+8)+'s';p.style.animationDelay=(Math.random()*6)+'s';p.style.width=p.style.height=(Math.random()*150+100)+'px';smokeEl.appendChild(p)}
+// Ember particles
+const embersEl=document.getElementById('embers');
+for(let i=0;i<20;i++){const e=document.createElement('div');e.className='ember';e.style.left=Math.random()*100+'%';e.style.bottom=(Math.random()*20)+'%';e.style.animationDuration=(Math.random()*4+3)+'s';e.style.animationDelay=(Math.random()*5)+'s';e.style.width=e.style.height=(Math.random()*3+1)+'px';embersEl.appendChild(e)}
+// Counter animation
+const counters=document.querySelectorAll('.counter');
+const cObs=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){const target=+e.target.dataset.target;let current=0;const inc=target/60;const timer=setInterval(()=>{current+=inc;if(current>=target){e.target.textContent=target+'+';clearInterval(timer)}else{e.target.textContent=Math.floor(current)}},30);cObs.unobserve(e.target)}})},{threshold:.5});
+counters.forEach(c=>cObs.observe(c));
+</script>
+</body>
+</html>
